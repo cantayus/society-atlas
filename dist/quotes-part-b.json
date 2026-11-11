@@ -1,0 +1,125 @@
+{
+  "note": "Verified short quotations and excerpts from primary institutional records or original texts. Archival quotations do not imply that the speaker visited a playable scene or held office during its year. Excerpts preserve wording and case; contextual descriptions are authored summaries.",
+  "chapters": [
+    {
+      "campus": "mit",
+      "encounters": [8, 17, 18],
+      "text": "Education can move a nation: the future belongs to those who understand it.",
+      "author": "Charles M. Vest",
+      "role": "President of MIT",
+      "tenure": "1990–2004",
+      "source": "https://web.mit.edu/president/communications/inaug-6-91.html",
+      "sourceTitle": "MIT · Charles M. Vest’s inaugural address, May 10, 1991",
+      "tenureSource": "https://news.mit.edu/2013/former-mit-president-charles-m-vest-dies-at-72-1213",
+      "context": "Archival quotation from the Education—To Move a Nation section of Vest’s 1991 inaugural address. Presented as an archival reflection, not dialogue in the 2010, 2019 or 2024 scene.",
+      "archival": true,
+      "excerpt": false
+    },
+    {
+      "campus": "northeastern",
+      "encounters": [10],
+      "text": "The world is too interesting to ignore",
+      "author": "Joseph E. Aoun",
+      "role": "President of Northeastern University",
+      "tenure": "2006–present",
+      "source": "https://cps.northeastern.edu/news/aoun-highlights-strategic-bets-state-university-address/",
+      "sourceTitle": "Northeastern · State of the University address report, October 13, 2011",
+      "tenureSource": "https://archivesspace.library.northeastern.edu/repositories/2/accessions/676",
+      "context": "Archival quotation from Aoun’s discussion of expanding experiential learning beyond Boston, reported in 2011. The university’s current president biography and archives were checked in November 2026.",
+      "archival": true,
+      "excerpt": true
+    },
+    {
+      "campus": "stanford",
+      "encounters": [11, 16],
+      "text": "A university is the ally of change, and change is the ally of the university.",
+      "author": "Gerhard Casper",
+      "role": "President of Stanford University",
+      "tenure": "1992–2000",
+      "source": "https://web.stanford.edu/dept/pres-provost/president/speeches/921002inaugural.html",
+      "sourceTitle": "Stanford · Gerhard Casper’s inaugural address, October 2, 1992",
+      "tenureSource": "https://president.stanford.edu/history",
+      "context": "Archival quotation from Casper’s discussion of the freedom to challenge established orthodoxy. The surrounding speech ties change to questioning assumptions and testing whether they are wrong.",
+      "archival": true,
+      "excerpt": false
+    },
+    {
+      "campus": "pennState",
+      "encounters": [12],
+      "text": "A well-ranked university is a land of opportunity for upward mobility",
+      "author": "Eric J. Barron",
+      "role": "President of Penn State",
+      "tenure": "2014–2022",
+      "source": "https://www.psu.edu/news/administration/story/penn-state-president-addresses-pa-senate-appropriations-committee",
+      "sourceTitle": "Penn State · Remarks to the Pennsylvania Senate Appropriations Committee, February 27, 2018",
+      "tenureSource": "https://www.psu.edu/news/administration/story/achievements-and-legacy-president-eric-j-barron",
+      "context": "Archival excerpt from Barron’s 2018 testimony about access and affordability. He immediately identified degree completion, especially for first-generation students, as a challenge. His presidency ended in May 2022.",
+      "archival": true,
+      "excerpt": true
+    },
+    {
+      "campus": "washu",
+      "encounters": [13],
+      "text": "a good part of leadership is just finding other people who can help you and do things better than you can do.",
+      "author": "William H. Danforth",
+      "role": "Chancellor of Washington University in St. Louis",
+      "tenure": "1971–1995",
+      "source": "https://olin.washu.edu/about/news-and-media/news/2020/09/william-danforth-chancellor-who-guided-tranformation-of-washu-and-olin-dies-at-94.php",
+      "sourceTitle": "WashU Olin · William Danforth remembrance, September 16, 2020",
+      "tenureSource": "https://washu.edu/people/william-h-danforth/",
+      "context": "Archival excerpt from Danforth’s 2018 Olin Dean’s Medal remarks, reproduced by the university in 2020. His correct university leadership title was Chancellor, not President.",
+      "archival": true,
+      "excerpt": true
+    },
+    {
+      "campus": "cmu",
+      "encounters": [14],
+      "text": "our first priority is broadening the education experience of our students",
+      "author": "Jared L. Cohon",
+      "role": "President of Carnegie Mellon University",
+      "tenure": "1997–2013",
+      "source": "https://www.cmu.edu/magazine/02fall/carrot.html",
+      "sourceTitle": "Carnegie Mellon Magazine · Speak softly, carry a giant carrot, Fall 2002",
+      "tenureSource": "https://www.cmu.edu/news/stories/archives/2024/march/remembering-jared-cohon-a-transformative-leader-at-carnegie-mellon-university",
+      "context": "Archival excerpt from a 2002 university magazine account of Cohon’s meeting with Engineering and Public Policy faculty. Cohon was not president during the playable 1978 Simon chapter; this is a later archival reflection.",
+      "archival": true,
+      "excerpt": true
+    },
+    {
+      "campus": "princeton",
+      "encounters": [15],
+      "text": "It is in times of national crisis that our true commitment to freedom of speech and thought is tested.",
+      "author": "Shirley M. Tilghman",
+      "role": "President of Princeton University",
+      "tenure": "2001–2013",
+      "source": "https://www.princeton.edu/meet-princeton/academic-freedom-and-free-expression",
+      "sourceTitle": "Princeton · Academic Freedom and Free Expression; quotation from the September 28, 2001 inaugural address",
+      "tenureSource": "https://princetoniana.princeton.edu/sites/g/files/toruqf2256/files/things-princeton/publications/LittleBookPresidents.pdf",
+      "context": "Archival quotation from Tilghman’s inaugural address of September 28, 2001, reproduced verbatim on Princeton’s academic freedom page.",
+      "archival": true,
+      "excerpt": false
+    }
+  ],
+  "menu": [
+    {
+      "text": "The first principle is that you must not fool yourself—and you are the easiest person to fool.",
+      "author": "Richard P. Feynman",
+      "role": "Physicist",
+      "source": "https://calteches.library.caltech.edu/51/2/CargoCult.htm",
+      "sourceTitle": "Caltech Archives · Cargo Cult Science, 1974 commencement address",
+      "context": "Feynman’s 1974 address on scientific integrity, preserved by Caltech’s library. The selected sentence concerns guarding against self-deception; the game does not treat a quotation as a substitute for evidence.",
+      "date": "1974",
+      "excerpt": false
+    },
+    {
+      "text": "ignorance more frequently begets confidence than does knowledge",
+      "author": "Charles Darwin",
+      "role": "Naturalist",
+      "source": "https://darwin-online.org.uk/converted/pdf/1871_Descent_F939.1.pdf",
+      "sourceTitle": "Darwin Online · The Descent of Man, volume I, introduction, page 3 (1871)",
+      "context": "Verbatim short excerpt from the original 1871 introduction, in a sentence criticizing confident declarations that a scientific problem cannot be solved. Original lower-case wording retained.",
+      "date": "1871",
+      "excerpt": true
+    }
+  ]
+}

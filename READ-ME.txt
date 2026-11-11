@@ -1,0 +1,31 @@
+THE SOCIETY ATLAS — BROWSER EDITION
+
+Open The-Society-Atlas.html in a modern desktop browser. This self-contained version includes all code, photographs and music. No installation, coding setup, account or paid model is required. Browser file-URL saves vary: export your journey from the notebook as a backup. Hosted and offline editions keep separate saves; export/import transfers them.
+
+Recommended first: choose Tutorial from the main menu. This optional introduction uses isolated practice state, so it does not change campaign routes, office discoveries, evidence or research results. Only its completion marker is recorded. You can leave the tutorial and start or resume your journey.
+
+All 18 encounters and the final proposal remain playable. Start at the south-plaza directory, locate the research contact and complete the experiment. Finish Philadelphia to open branching Atlas routes. After each completed problem, choose the named Next campus button, review the itinerary and choose Travel this route. Other visits and alternative routes remain available. Progress saves automatically. Existing version-1 saves are retained by the update.
+
+Answer attempts and rewards: a hint appears after two incorrect answers, and five incorrect answers end the current encounter's attempt. Retry that encounter without losing earlier campuses, evidence or earned rewards. Active research timing starts with your first research action and pauses when the panel is closed or the page is hidden. A first clear earns 100 insight points within 2 active minutes, 50 within 5, or 25 thereafter. The first-clear reward is kept; replays cannot farm points. Reading, exploration and the optional tutorial have no countdown or required speed.
+
+Default controls: click paths to move; WASD moves; E interacts; C centers; arrows pan; right/middle-drag pans; +/− or wheel zooms; Space pauses; Escape closes; Tab/Enter use controls. The field guide remaps six letter commands. Settings controls text, speed, reduced motion, regional weather effects and music levels.
+
+Campus presentation: original source-coded isometric buildings and grounds use richer masonry, fine roof slates, relief, coherent shadows and varied miniature silhouettes in a classic strategy-game direction. Drawn ground, buildings and props are reused through a raster sprite cache when supported, with direct geometry as fallback. Age of Empires II is a perspective and exploration reference; none of its assets is copied. Full institution name plaques, restrained color banners and source-informed signature buildings identify each campus. Plans, offices and distances remain compact reconstructions.
+
+The grounds include students, other pedestrians, birds, squirrels, rabbits and cats. The 1890s scene uses a handcart; later scenes have era-styled cars on the outer streets. Their presence and routes are fictional scenic choices. Pause and reduced motion control activity. This edition contains no generated title bitmap or invented replacement faces.
+
+Designed autumn ambience uses NOAA/NWS regional climate sources. Sunshine, haze, passing clouds, light drizzle, breezes and sparse flurries are representative scenic choices, not a live forecast or a reconstruction of a historical day's weather. Modern climate normals do not establish past conditions. Use Settings > Regional weather effects to switch the layer off; Reduced motion suppresses moving precipitation and leaves. The scene label marks designed autumn ambience; the source package retains regional URLs and scope notes in dist/weather.js.
+
+Animated research advisers: identified source photographs receive a deterministic ink-and-color treatment and conventional 2D mouth/jaw gestures, blinking and breathing. Read the captioned educational dramatization, use Next line or Replay line, and select collaborators when available. A lighter thought offers an optional kind scholarly joke. These captions and jokes are original teaching fiction, not authentic quotations or endorsements. No TTS, synthetic voice or recorded scholar speech is used. Reduced motion freezes portrait gestures and hidden pages suspend animation. Source credits, photo dates and license status remain in the notebook and ledgers; these are reference portraits, not a claim that every image dates to its encounter.
+
+Optional campus play: choose Campus gadget to walk to a tabletop installation. Five toy types appear across the visits: marble runs, a water-channel table, a postcard press, lantern relays and a zoetrope. They have no research score and are not required for the campaign; the eighteen substantive research problems remain separate.
+
+Music is Grieg’s Morning Mood, performed by the Czech National Symphony Orchestra as the Musopen Symphony Orchestra in 2012. The recording is dedicated to the public domain by Musopen. It starts after interaction, fades down for research, and uses a gentle repeat crossfade. Anno 1800 is a broad orchestral atmosphere reference; its soundtrack is not included. Ambience/effects/voice are reserved silent channels in this edition.
+
+Menu quotations by Feynman and Darwin and university-leader quotations in all chapters include primary-source links and archival context. Correct titles, including WashU Chancellor and UC system President, are retained. They are separate from the reconstructed seminar dialogue.
+
+Research integrity: all residents and teaching data are fictional/synthetic; results come from explicit code. No live model calls occur. LLM and computer-vision research lessons remain subjects of investigation. The itinerary is selected rather than a complete history. Campus plans, offices and transit links are designed reconstructions.
+
+Hosting: dist/ is the entire portable static browser game. The source package includes a manual GitHub Pages workflow and a deployment/domain design guide. The current private preview does not imply a GitHub public release. Export saves before changing domain. Follow Deployment-and-design.txt for future hosting and portrait redistribution permissions.
+
+Validation: automated research completion/numerical checks, campus routing, save, keyboard and finale checks are included. Representative pacing, learning transfer and low-spec performance need broader playtesting. See the delivered verification notes for browser checks performed on this revision.

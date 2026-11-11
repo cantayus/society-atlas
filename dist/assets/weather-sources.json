@@ -1,0 +1,277 @@
+{
+  "title": "The Society Atlas — designed regional autumn ambience",
+  "disclaimer": "Designed regional autumn ambience. Not live weather, a forecast, or an assertion about the weather in a historical encounter.",
+  "sources": [
+    {
+      "id": "boston",
+      "title": "NWS CWSU Nashua Weather Impact Playbook — Boston climatology",
+      "url": "https://www.weather.gov/media/aviation/wips/ZBW-WIP-1109.pdf",
+      "scope": "The Boston climate discussion describes maritime moderation and changing fair, cloudy, and wet weather. The game selects gentle examples; it does not simulate observed dates."
+    },
+    {
+      "id": "philadelphia",
+      "title": "NWS Philadelphia/Mount Holly — Philadelphia climate normals",
+      "url": "https://www.weather.gov/phi/clinormalsKPHL",
+      "scope": "Local seasonal normals anchor a cooling autumn setting; breeze and leaf motion are artistic choices."
+    },
+    {
+      "id": "princeton",
+      "title": "NWS Philadelphia/Mount Holly — Trenton climate normals",
+      "url": "https://www.weather.gov/phi/clinormalsKTTN",
+      "scope": "Trenton is a nearby regional reference for Princeton, not a campus weather station. The game uses crisp autumn light rather than claiming a measured campus condition."
+    },
+    {
+      "id": "indiana",
+      "title": "NWS Indianapolis — 1991–2020 climate normals, including Bloomington",
+      "url": "https://www.weather.gov/ind/newnormals2021",
+      "scope": "Central Indiana seasonal temperature and precipitation context; the chosen soft shower is fictional."
+    },
+    {
+      "id": "indianaFreeze",
+      "title": "NWS Indianapolis — frost and freeze dates for central Indiana",
+      "url": "https://www.weather.gov/ind/frostfreezedate",
+      "scope": "Includes Bloomington and the region’s autumn cooling. No specific game day or historical temperature is inferred."
+    },
+    {
+      "id": "losAngeles",
+      "title": "NOAA/NWS Technical Memorandum WR-261 — overview of Los Angeles climate",
+      "url": "https://www.weather.gov/media/wrh/online_publications/TMs/TM-261.pdf",
+      "scope": "The overview discusses a dry-summer/rainy-winter regime, marine-layer influence and light sea breezes. The game chooses a mild dry interval and faint coastal haze, with no snow."
+    },
+    {
+      "id": "bayArea",
+      "title": "NWS San Francisco Bay Area — Ask the Expert",
+      "url": "https://www.weather.gov/mtr/ask_expert",
+      "scope": "Explains coastal marine fog and seasonal storm-track changes. Palo Alto is not equated with foggier coastal San Francisco; only a light marine haze is used."
+    },
+    {
+      "id": "southBend",
+      "title": "NWS Northern Indiana — South Bend climate",
+      "url": "https://www.weather.gov/iwx/climatology_southbend_climate",
+      "scope": "Discusses Lake Michigan influence, cool-season cloudiness, and a snow season beginning in late autumn. The game occasionally uses a few gentle flakes without accumulation."
+    },
+    {
+      "id": "newYork",
+      "title": "NWS New York — Central Park climate normals and extremes",
+      "url": "https://www.weather.gov/media/okx/Climate/CentralPark/nycnormals.pdf",
+      "scope": "1991–2020 seasonal and monthly climate context. Central Park is a regional reference; the Columbia scene’s drizzle is an authored choice."
+    },
+    {
+      "id": "centralPA",
+      "title": "NWS State College — local climate resources",
+      "url": "https://www.weather.gov/ctp/moreclimate",
+      "scope": "Provides State College climate references and central Pennsylvania autumn freeze context."
+    },
+    {
+      "id": "centralPASnow",
+      "title": "NWS State College — snowfall and seasonal water resources",
+      "url": "https://www.weather.gov/ctp/moreWater?tabName=Snowfall",
+      "scope": "Documents central Pennsylvania snowfall climatology and first accumulating snow context. Sparse scenic flurries are not a claim about the date of a visit."
+    },
+    {
+      "id": "stLouis",
+      "title": "NWS St. Louis — Regional Climate Summary",
+      "url": "https://www.weather.gov/lsx/regionalclimatesummary",
+      "scope": "Describes increased autumn variability and dry intervals between weather systems. The game uses passing cloud and brighter intervals, not severe weather."
+    },
+    {
+      "id": "pittsburgh",
+      "title": "NWS Pittsburgh — November climatic data, 1991–2020 normals",
+      "url": "https://www.weather.gov/media/pbz/normals/November%20data.pdf",
+      "scope": "Anchors a cool late-autumn setting. Soft overcast and light drizzle are authored scenic examples, not a reconstruction of 1978."
+    }
+  ],
+  "profiles": [
+    {
+      "key": "penn",
+      "campus": "University of Pennsylvania",
+      "region": "Philadelphia, Pennsylvania",
+      "weather": "Brisk air and a light leaf breeze",
+      "modes": [
+        "breeze",
+        "clouds"
+      ],
+      "sourceIds": [
+        "philadelphia"
+      ],
+      "context": "An authored, pleasant late-autumn condition chosen within regional climate context. It does not report current weather or establish what the weather was during the historical encounter."
+    },
+    {
+      "key": "harvard",
+      "campus": "Harvard University",
+      "region": "Cambridge / Boston, Massachusetts",
+      "weather": "Passing clouds and an occasional light drizzle",
+      "modes": [
+        "clouds",
+        "drizzle",
+        "breeze"
+      ],
+      "sourceIds": [
+        "boston"
+      ],
+      "context": "An authored, pleasant late-autumn condition chosen within regional climate context. It does not report current weather or establish what the weather was during the historical encounter."
+    },
+    {
+      "key": "indiana",
+      "campus": "Indiana University",
+      "region": "Bloomington, Indiana",
+      "weather": "Gentle overcast with passing light showers",
+      "modes": [
+        "drizzle",
+        "clouds"
+      ],
+      "sourceIds": [
+        "indiana",
+        "indianaFreeze"
+      ],
+      "context": "An authored, pleasant late-autumn condition chosen within regional climate context. It does not report current weather or establish what the weather was during the historical encounter."
+    },
+    {
+      "key": "ucla",
+      "campus": "UCLA",
+      "region": "Los Angeles, California",
+      "weather": "Soft autumn sunshine and faint coastal haze",
+      "modes": [
+        "sun",
+        "haze"
+      ],
+      "sourceIds": [
+        "losAngeles"
+      ],
+      "context": "An authored, pleasant late-autumn condition chosen within regional climate context. It does not report current weather or establish what the weather was during the historical encounter."
+    },
+    {
+      "key": "notreDame",
+      "campus": "University of Notre Dame",
+      "region": "South Bend, Indiana",
+      "weather": "Cool cloud cover with occasional gentle flurries",
+      "modes": [
+        "clouds",
+        "flurry",
+        "clouds"
+      ],
+      "sourceIds": [
+        "southBend"
+      ],
+      "context": "An authored, pleasant late-autumn condition chosen within regional climate context. It does not report current weather or establish what the weather was during the historical encounter."
+    },
+    {
+      "key": "columbia",
+      "campus": "Columbia University",
+      "region": "New York City, New York",
+      "weather": "Mild overcast and a little autumn drizzle",
+      "modes": [
+        "drizzle",
+        "clouds"
+      ],
+      "sourceIds": [
+        "newYork"
+      ],
+      "context": "An authored, pleasant late-autumn condition chosen within regional climate context. It does not report current weather or establish what the weather was during the historical encounter."
+    },
+    {
+      "key": "mit",
+      "campus": "Massachusetts Institute of Technology",
+      "region": "Cambridge / Boston, Massachusetts",
+      "weather": "A river breeze beneath drifting clouds",
+      "modes": [
+        "breeze",
+        "clouds",
+        "drizzle"
+      ],
+      "sourceIds": [
+        "boston"
+      ],
+      "context": "An authored, pleasant late-autumn condition chosen within regional climate context. It does not report current weather or establish what the weather was during the historical encounter."
+    },
+    {
+      "key": "northeastern",
+      "campus": "Northeastern University",
+      "region": "Boston, Massachusetts",
+      "weather": "Soft cloud cover with occasional fine drizzle",
+      "modes": [
+        "clouds",
+        "drizzle"
+      ],
+      "sourceIds": [
+        "boston"
+      ],
+      "context": "An authored, pleasant late-autumn condition chosen within regional climate context. It does not report current weather or establish what the weather was during the historical encounter."
+    },
+    {
+      "key": "stanford",
+      "campus": "Stanford University",
+      "region": "Palo Alto, California",
+      "weather": "Pale sunshine and a trace of marine haze",
+      "modes": [
+        "sun",
+        "haze"
+      ],
+      "sourceIds": [
+        "bayArea"
+      ],
+      "context": "An authored, pleasant late-autumn condition chosen within regional climate context. It does not report current weather or establish what the weather was during the historical encounter."
+    },
+    {
+      "key": "pennState",
+      "campus": "Penn State",
+      "region": "State College, Pennsylvania",
+      "weather": "Cool mist with an occasional late-autumn flurry",
+      "modes": [
+        "mist",
+        "flurry",
+        "clouds"
+      ],
+      "sourceIds": [
+        "centralPA",
+        "centralPASnow"
+      ],
+      "context": "An authored, pleasant late-autumn condition chosen within regional climate context. It does not report current weather or establish what the weather was during the historical encounter."
+    },
+    {
+      "key": "washu",
+      "campus": "Washington University in St. Louis",
+      "region": "St. Louis, Missouri",
+      "weather": "Changeable autumn light and passing clouds",
+      "modes": [
+        "clouds",
+        "sun",
+        "breeze"
+      ],
+      "sourceIds": [
+        "stLouis"
+      ],
+      "context": "An authored, pleasant late-autumn condition chosen within regional climate context. It does not report current weather or establish what the weather was during the historical encounter."
+    },
+    {
+      "key": "cmu",
+      "campus": "Carnegie Mellon University",
+      "region": "Pittsburgh, Pennsylvania",
+      "weather": "Soft overcast with a little fine drizzle",
+      "modes": [
+        "drizzle",
+        "clouds"
+      ],
+      "sourceIds": [
+        "pittsburgh"
+      ],
+      "context": "An authored, pleasant late-autumn condition chosen within regional climate context. It does not report current weather or establish what the weather was during the historical encounter."
+    },
+    {
+      "key": "princeton",
+      "campus": "Princeton University",
+      "region": "Princeton, New Jersey",
+      "weather": "Crisp air and a gentle autumn breeze",
+      "modes": [
+        "breeze",
+        "sun",
+        "clouds"
+      ],
+      "sourceIds": [
+        "princeton",
+        "philadelphia"
+      ],
+      "context": "An authored, pleasant late-autumn condition chosen within regional climate context. It does not report current weather or establish what the weather was during the historical encounter."
+    }
+  ]
+}

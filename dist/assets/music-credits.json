@@ -1,0 +1,20 @@
+{
+  "track": "Morning Mood, from Peer Gynt Suite No. 1, Op. 46",
+  "composer": "Edvard Grieg",
+  "performers": "Czech National Symphony Orchestra, credited as the Musopen Symphony Orchestra",
+  "recordingProject": "Musopen Kickstarter Project",
+  "recordingDateListed": "2012-04-07",
+  "localFile": "assets/music/morning-mood.ogg",
+  "sourcePage": "https://commons.wikimedia.org/wiki/File:Musopen_-_Morning.ogg",
+  "originalFile": "https://upload.wikimedia.org/wikipedia/commons/1/1a/Musopen_-_Morning.ogg",
+  "sourceOrganization": "Musopen",
+  "sourceOrganizationPage": "https://musopen.org/music/777-peer-gynt-suite-no-1-op-46/",
+  "license": "Public domain dedication by Musopen, stated to apply worldwide on the source file page",
+  "durationSecondsListed": 229.183041666667,
+  "fileBytesListed": 3453888,
+  "sha1Listed": "84b855cba2c412c9697895beedfc44d48046931c",
+  "adaptation": "Local playback with volume reduction in research scenes and an approximately five-second crossfade when the recording repeats. This is a track wrap, not a verified seamless musical loop.",
+  "provenance": "Existing orchestral performance; no generated music or cloned voices.",
+  "otherAudioChannels": "Ambience, effects and voice controls are retained independently for compatibility. No recordings are currently assigned to these channels; progress feedback is visual.",
+  "styleReference": "The requested Anno 1800 inspiration concerns relaxed orchestral atmosphere. No Anno soundtrack recording or melody is included."
+}

@@ -1,0 +1,60 @@
+THE SOCIETY ATLAS — BROWSER DELIVERY AND HOSTING DESIGN
+
+Delivery target
+The primary product is a desktop browser game. The complete playable runtime is the dist/ directory: index.html, CSS, JavaScript and local media. No server, database, paid inference service, provider-specific SDK, build system or account is required by the game. The separate self-contained HTML download also plays offline. The current private preview's sign-in belongs to its hosting layer, not to the game.
+
+First use
+The optional Tutorial in the main menu is recommended first. It uses isolated practice state and leaves campaign routes, office discoveries, evidence and research results unchanged. Only the tutorial completion marker is recorded. Players can leave practice and start or resume the campaign; the tutorial is not a prerequisite for any encounter.
+
+Research attempts and rewards
+Two incorrect answers trigger a hint; five end the current encounter's attempt. Retrying resets that failed research problem while preserving earlier campaign progress and rewards. The first correct clear earns Quick Insight (100 points) within 120,000 active milliseconds, Steady Insight (50 points) within 300,000, or a Research Seal (25 points) afterward. Rewards are recorded once per encounter, so practice replays cannot add points. Active timing begins with the first research action and pauses when the research panel closes or the page is hidden. Exploration and reading have no countdown or completion deadline, and the optional tutorial is unscored. Challenge attempts, first-clear rewards and best results are included in the local journey record and export.
+
+Current presentation and optional play
+The campus view uses original source-coded isometric geometry with richer masonry, roof slates, relief, shadows and landscape detail in a classic strategy-game direction. A raster cache reuses drawn ground, buildings and props when supported; direct geometry is the fallback. Age of Empires II is a visual-perspective and exploration reference, not an asset source. Each campus has its full institution name, restrained color banners and source-informed signature buildings. The miniature plans, signs, office interiors and relative distances are designed reconstructions.
+
+Students and other campus pedestrians move through the grounds alongside small birds, squirrels, rabbits and cats. The 1890s scene uses a handcart; later scenes include era-styled cars at the outer streets. These figures, routes and vehicles are fictional scenic details, not evidence about particular historical residents or traffic. Movement respects pause and reduced-motion settings.
+
+Research encounters include a captioned adviser panel using the identified, conventionally illustrated source photographs. Conventional 2D source-patch movement supplies small mouth/jaw gestures, blinking and breathing. Next line and Replay line control the teaching captions; researcher selection is available for groups, and A lighter thought offers an optional kind scholarly joke. The captions and jokes are educational dramatizations, not authentic quotations, recordings or endorsements. No TTS, generated voice or live model call is used. Reduced motion freezes portrait gestures, and hidden pages suspend their animation.
+
+The Campus gadget command leads to an optional tabletop installation. Five toy types are distributed across the visits: marble runs, a water-channel table, a postcard press, lantern relays and a zoetrope. These diversions have no research score and are not required for campaign completion; the eighteen research problems remain separate.
+
+Weather and accessibility
+Regional NOAA/NWS climate references support a designed autumn setting. Sunshine, haze, clouds, light drizzle, breezes and occasional sparse flurries are representative scenic choices. They are neither a live forecast nor a claim about weather on the historical encounter dates; modern regional normals are not historical observations. The scene label identifies designed autumn ambience; regional source URLs and scope notes are retained in dist/weather.js. Settings > Regional weather effects toggles the scenery, while Reduced motion suppresses moving precipitation and leaves. Effects pause with exploration and leave office and directory clues readable.
+
+Portable paths
+All runtime scripts, photographs and music use relative paths. The game can run from a GitHub Pages project subdirectory (for example USER.github.io/REPOSITORY/), a domain root, or another static host. No origin, repository name, API secret or deployment ID is built into the runtime. .openai/hosting.json is used only by the existing private preview host.
+
+GitHub Pages option
+1. Create the GitHub repository you want to own and upload this source package, including dist/ and .github/workflows/deploy-pages.yml. GitHub is source hosting; GitHub Pages serves the game.
+2. In repository Settings > Pages, choose GitHub Actions as the publishing source.
+3. Open Actions > Publish browser game > Run workflow. This supplied workflow is manual, so uploading or editing source does not unexpectedly publish it.
+4. Wait for the deployment to finish, then use the URL displayed by the action. The workflow uploads dist/ directly; no dependency install or build is needed.
+5. Test New Journey, an existing imported save, portrait and music playback, keyboard navigation, source links, and a complete campus-to-research loop at the final URL.
+
+The source package includes the workflow; no GitHub repository has been created or modified by this update. Your current private preview's audience is preserved. Any later public release is a separate publishing choice.
+
+Future domain
+When you choose and purchase a domain, first verify it with GitHub Pages and set the custom domain in repository Settings > Pages. Then add the DNS records described by GitHub for that exact domain. A subdomain such as play.EXAMPLE.COM uses a CNAME pointing to USER.github.io (not to a repository path). An apex domain uses GitHub's currently documented A/AAAA or supported ALIAS/ANAME records. After DNS validates, enable HTTPS in Pages settings. There is deliberately no placeholder CNAME or invented domain in this project.
+
+For the supplied GitHub Actions publishing workflow, GitHub states that a CNAME file is not required and existing CNAME files are ignored; use the repository's Pages custom-domain setting. Branch-based publication has different CNAME behavior. Check the official instructions when you connect the purchased domain.
+
+Save portability
+Progress is kept in localStorage under society-atlas-v1. Browser storage is specific to an origin. Moving from the private preview to GitHub Pages or a purchased domain does not automatically move saves. Export the journey in the Field Notebook, then import it on the new origin. Imported saves preserve encounters, evidence, routes, accessibility preferences and audio levels. Do not treat browser storage as a cloud backup.
+
+Media and public-release review
+The generated title image has been removed. Scenery and its raster texture are source-coded Canvas geometry. Portraits are identified photographs shown with deterministic color and line filtering and conventional 2D animation; no generative portrait model is used. Animation does not change the source photograph's rights status. The Commons ledger records each photograph's author, source, license and any date metadata. Official institutional headshots without an explicit reuse license remain marked as rights retained by the source; obtain redistribution permission or replace these with cleared portraits before a public release. Preserve each image's applicable attribution/share-alike terms. Do not describe unlicensed institutional photographs as public domain.
+
+Music is Grieg's Morning Mood, performed by the Czech National Symphony Orchestra as the Musopen Symphony Orchestra in 2012. The specific recording is dedicated to the public domain by Musopen. Anno 1800 is an orchestral atmosphere reference only; its recordings, melodies and assets are not included. Source and performer credits are supplied locally.
+
+Architecture and quotation provenance
+Landmark geometry, material palettes and period corrections are grounded in the institutional source ledger. Compact campus plans and office locations remain reconstructions. Quotations are short sourced archival excerpts with speaker titles and tenures; they are separate from fictional seminar dialogue. Photographs can predate or postdate an encounter; photo date metadata is preserved rather than falsely presenting every image as contemporary with the scene.
+
+Validation limits
+The package includes automated checks for research outcomes, navigation, saves, optional toys, animation lifecycle and drawing contracts. Geometry checks are not screenshot comparisons or a measured hardware-performance result. Broader playtesting is still needed for representative campaign duration, learning transfer and low-spec performance. Refer to the accompanying verification notes for browser checks actually performed on the delivered revision.
+
+Official deployment documentation, checked 2026-11-10
+https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages
+https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site
+https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/verifying-your-custom-domain-for-github-pages
+
+No domain purchase, DNS change or GitHub publication has been performed. These files make that future deployment concrete and portable.

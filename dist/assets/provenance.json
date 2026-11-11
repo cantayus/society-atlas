@@ -1,0 +1,31 @@
+{
+  "scenery": {
+    "format": "Source-coded Canvas geometry",
+    "generationModel": false,
+    "notes": "Campus landmarks based on institutional architectural sources. Layouts, surface treatments and props are reconstructed. Conventional Canvas geometry is rasterized to reusable scenery sprites; students, animals and period traffic are animated by code."
+  },
+  "portraits": {
+    "format": "Identified photographs with deterministic posterization and edge filtering",
+    "generationModel": false,
+    "credits": "See portraits/commons-manifest.json and portraits/official-manifest.json",
+    "animation": "Manually positioned mouth and eye landmarks, small source-patch warps and conventional 2D motion. Captioned teaching dialogue is fictional; no recorded or cloned researcher voice."
+  },
+  "weather": {
+    "format": "Deterministic Canvas light, haze, rain, leaves and sparse flurries",
+    "generationModel": false,
+    "context": "Designed representative autumn ambience, not observed historical or live weather",
+    "credits": "weather-sources.json"
+  },
+  "campusToys": {
+    "format": "Original source-coded toy mechanisms and conventional Canvas drawings",
+    "context": "Optional fictional campus installations; they do not provide research evidence or campaign credit"
+  },
+  "music": {
+    "work": "Morning Mood",
+    "composer": "Edvard Grieg",
+    "performers": "Czech National Symphony Orchestra / Musopen Symphony Orchestra",
+    "recording": 2012,
+    "license": "Released into the public domain by Musopen",
+    "credits": "music-credits.json"
+  }
+}

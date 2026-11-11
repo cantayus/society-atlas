@@ -1,0 +1,27 @@
+THE SOCIETY ATLAS — TUTORIAL, REWARDS AND WORKSPACE REVISION
+2026-11-10 · Site version 6
+
+Published source
+b7eb4b894f57b4b4570cddc79ccdb9fc634ebb15
+Deployment succeeded at the existing game URL. The existing audience was preserved. No GitHub repository, GitHub Pages publication, domain purchase or DNS change has been performed. GitHub access and the destination repository are still needed to complete that separate publication.
+
+Tutorial
+The opening menu prominently recommends the hands-on tutorial first; New Journey remains available. Six practice stages teach directory reading, camera controls, office finding, prediction and sampling, bounded follow-up, and reviewing/travelling a next-campus itinerary. The practice has no campaign score or timer. Only its completion marker is saved; campaign location, evidence and research progress are retained. Completed players can replay it, and existing journeys can resume.
+
+Attempts and rewards
+Incorrect graded answers reveal a contextual hint at error two. Error five locks the encounter's attempt and opens Game Over. A retry replaces only that failed partial puzzle, preserving previous encounters, evidence and rewards. Incomplete submissions, predictions and ordinary experiments are ungraded. The first correct clear earns 100 insight points within two active minutes, 50 within five, or 25 afterward. Active timing begins with meaningful research interaction, pauses on modal close/page hiding, and is checkpointed for saves. Replays cannot collect another award. Failed/stale completion callbacks cannot bypass the failure lock.
+
+Layout
+Menu wisdom appears separately from the campaign controls. Campus wayfinding sits on the left; research goals and archival reflections sit on the right. Research conversations, experiment controls, final decisions and reward status occupy distinct areas. The tutorial keeps the map, coaching card and observation results visible in separate panels. Narrow layouts retain a readable sequential flow.
+
+Browser verification
+Completed the entire six-stage tutorial in an isolated review journey and resumed the saved campus. Reviewed the distributed campus and research layouts visually. On a separate local review origin, started a new journey, reached the first research room, performed the comparison, verified the automatic second-error hint, submitted five wrong answers and observed Game Over. Retried, completed the problem correctly, and observed Quick Insight +100 points plus the persistent named Next campus action. These checks did not modify the normal player save.
+
+Automated verification
+58 tests pass: existing campus/navigation/save/rendering/source checks, six tutorial checks, nine challenge-service checks, eight app/challenge integration checks, and six research-grading checks. Coverage includes stage gating, remapped controls, focus-safe tutorial keys, pause/visibility/reduced-motion cleanup, isolated progress, resume/reset behavior, exact reward thresholds, five-error lock, automatic help, failure-only retry, immutable first-clear awards, import normalization and durable timing. The separate tools/check-research.cjs also passes all 18 authored research completion paths and numerical checks.
+
+Delivery
+The self-contained HTML embeds every runtime script, processed portrait and music file. The source ZIP contains dist/, tests/, tools/, the hidden manual GitHub Pages workflow, the deployment guide and these notes. Source paths are relative and compatible with a Pages project subdirectory. Upload the unpacked contents rather than the ZIP alone. Export a journey from the notebook before moving domains, then import it at the new origin.
+
+Media and remaining review
+Scenery and tutorial visuals use conventional source-coded Canvas drawings. Adviser portraits use identified photographs with deterministic filtering and conventional 2D source-patch animation; dialogue is teaching fiction. Music remains the Musopen public-domain performance of Grieg's Morning Mood. Some institutional portraits lack a documented open redistribution license; the ledgers and deployment guide retain the public-release clearance notes. Broader campaign pacing, learning transfer, historical-art review and low-spec performance still need representative playtesting. Logic and Canvas checks are not an FPS measurement or a screen-reader certification.
