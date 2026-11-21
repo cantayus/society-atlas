@@ -1,7 +1,7 @@
 /* Attempt grading tests use the actual research UI through a small DOM adapter.
  * Numerical/experiment checks remain in tools/check-research.cjs. */
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
-const source=fs.readFileSync(path.resolve(__dirname,'../dist/research.js'),'utf8');
+const source=fs.readFileSync(path.resolve(__dirname,'../../dist/legacy/research.js'),'utf8');
 function harness(id=1,opts={}){
  class El{constructor(tag='div',attr='',body=''){this.tag=tag;this.nodes=[];this.listeners={};this.textContent='';this.checked=/\bchecked\b/.test(attr);this.disabled=/\bdisabled\b/.test(attr);this.id=(attr.match(/\bid="([^"]*)"/)||[])[1];this.classes=(attr.match(/\bclass="([^"]*)"/)||[])[1]||'';this.value=(attr.match(/\bvalue="([^"]*)"/)||[])[1]||'';if(tag==='select'){const a=[...body.matchAll(/<option\b([^>]*)>([\s\S]*?)<\/option>/g)],chosen=a.find(o=>/\bselected\b/.test(o[1]))||a[0];this.value=chosen?(chosen[1].match(/\bvalue="([^"]*)"/)||[])[1]||'':'';}}
   set innerHTML(html){this.html=html;this.nodes=[];const re=/<([a-z][a-z0-9-]*)\b([^>]*)>/gi;let m;while(m=re.exec(html))this.nodes.push(new El(m[1],m[2],html.slice(re.lastIndex).split('</'+m[1]+'>')[0]));}

@@ -1,7 +1,7 @@
 /* Hands-on tutorial behavior against real UI handlers. The small DOM/Canvas
  * adapter is not a browser rendering, keyboard-focus, or accessibility audit. */
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
-const dist=path.resolve(__dirname,'../dist'),read=f=>fs.readFileSync(path.join(dist,f),'utf8'),copy=x=>JSON.parse(JSON.stringify(x));
+const dist=path.resolve(__dirname,'../../dist/legacy'),read=f=>fs.readFileSync(path.join(dist,f),'utf8'),copy=x=>JSON.parse(JSON.stringify(x));
 function runtime(files=[],initial){
  const raf=new Map(),timers=new Map(),ids=new Map(),elements=new Map(),storage=new Map();let now=0,serial=0,writes=0;
  if(initial)storage.set('society-atlas-v1',JSON.stringify(initial));

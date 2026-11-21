@@ -6,7 +6,7 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const path=require('node:path');
 const vm=require('node:vm');
-const dist=path.resolve(__dirname,'../dist');
+const dist=path.resolve(__dirname,'../../dist/legacy');
 const copy=value=>JSON.parse(JSON.stringify(value));
 
 function load(initialSave){
