@@ -290,3 +290,6 @@ body.reduced .plaque { animation: none; opacity: 1; }
 #menu .hint { min-height: 1.5em; margin: 14px 0 0; text-align: center; font-size: .88em; color: var(--muted); font-style: italic; }
 #menu .quote { position: absolute; top: auto; right: 26px; bottom: 62px; left: auto; max-width: 350px; }
 @media (max-width: 720px) { #menu .board { left: 50%; top: 54%; transform: translate(-50%, -50%) !important; } #menu .quote { display: none; } }
+
+#menu .board h1 { margin-bottom: 20px; }
+#menu .board { padding-bottom: 26px; }
