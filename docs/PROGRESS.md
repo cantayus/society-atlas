@@ -12,6 +12,7 @@ Branch `v2-upgrade`. The first edition is frozen at `dist/legacy/` and linked fr
 - Caricature portraits for the 27 scholars who had photographs in the first edition (`tools/make-caricatures.py`).
 - Two campus secrets on every campus, five field sketches per visit, stamps, archive cards, achievements.
 - Save migration from the first edition (read-only), export and import.
+- Title screen: a board of menu plaques over a live campus. All text given a plain-language pass, including the first edition's encounter text as V2 shows it (`dist/js/voice.js`).
 
 ## Not built, or needs you
 - Portraits for the 19 added scholars are monogram placeholders. Put a photograph of each in a folder and run `python3 tools/make-caricatures.py SRC OUT`.

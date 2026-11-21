@@ -11,7 +11,7 @@
 
   // ---------- small talk (invented; nobody real is quoted) ----------
   const CHAT = {
-    old: ['They say electric light will ruin our eyes. I say the reading already has.', 'I counted every lamp post on the avenue for a wager. Sampling would have been quicker.', 'Mind the tram. It has right of way and a poor temper.', 'The library closes at dusk. Knowledge keeps office hours.', 'My landlady charges extra for candles. I study economics in self-defence.', 'A census taker came by twice. We gave him two different answers, to be fair.'],
+    old: ['They say electric light will ruin our eyes. I say the reading already has.', 'I counted every lamp post on the avenue for a wager. Sampling would have been quicker.', 'Mind the tram. It has right of way and a poor temper.', 'The library closes at dusk. Knowledge keeps office hours.', 'My landlady charges extra for candles. I study economics in self-defense.', 'A census taker came by twice. We gave him two different answers, to be fair.'],
     mid: ['The punch-card machine ate my thesis. It seemed to enjoy it.', 'Everyone is running surveys. Has anyone asked whether people want to be asked?', 'Coffee is a nickel and the seminar is free. One of them keeps me awake.', 'My adviser says “interesting” the way other people say “no”.', 'We ran the numbers by hand. Twice. They disagreed, which is at least honest.', 'Somebody left a slide rule on that bench on Tuesday. It is still there. A natural experiment in honesty.'],
     modern: ['My code runs. I do not know why. I am not touching it.', 'The dataset has four million rows and one of them is a cat.', 'Reviewer two wants a robustness check. Reviewer two always wants a robustness check.', 'I came for one seminar and stayed for the pizza. Selection effects are real.', 'The wifi is down, so everyone is talking to each other. It is unsettling.', 'I have been “almost done” with this chapter since spring.', 'Someone asked my sample size and I said “adequate” with real confidence.'],
     any: ['The squirrels are bolder every term. Somebody should run a panel study.', 'If you can hear the bell, you are late for something.', 'The plaza directory knows where everyone is. It is the most cited object on campus.', 'The cat belongs to no department. That is why everyone likes it.', 'A fine day for fieldwork. It is always a fine day for someone else’s fieldwork.'],
@@ -123,7 +123,7 @@
   function archive() {
     const v = s(), enc = G.enc, id = enc.id, src = id ? SA.Encounters.sourcesFor(enc) : [], first = id && !v.collect.cards.includes(id);
     if (!id) { SA.UI.modal({ title: 'City Archive', kicker: 'Bellwether', cls: 'narrow', body: `<p style="font-family:var(--serif);font-size:1.1em;line-height:1.55">The attendance ledgers go back twenty years. Every year the count is taken at the Town Hall steps at half past seven. Nobody has ever counted at the canal.</p><p class="small muted">A fictional record for a fictional city.</p>`, footer: '<button class="btn primary" data-close>Close the ledger</button>' }); return; }
-    SA.UI.modal({ title: 'Archive card', kicker: `${enc.campus} · catalogue ${String(id).padStart(2, '0')}`, cls: 'narrow', body: `<div class="paper">${src.map((x) => `<h3 style="font-size:1.05em;margin-bottom:4px">${esc(x.title)}</h3><p class="small">${esc(x.note || '')}</p><p><a href="${esc(x.url)}" target="_blank" rel="noopener">Open the source ↗</a></p>`).join('') || '<p>No card on file.</p>'}</div><p class="note" style="margin-top:10px">Research anchors are real. The rooms, dialogue and data you meet on this campus are teaching reconstructions.</p>`, footer: '<button class="btn primary" data-close>File the card</button>' });
+    SA.UI.modal({ title: 'Archive card', kicker: `${enc.campus} · catalogue ${String(id).padStart(2, '0')}`, cls: 'narrow', body: `<div class="paper">${src.map((x) => `<h3 style="font-size:1.05em;margin-bottom:4px">${esc(x.title)}</h3><p class="small">${esc(x.note || '')}</p><p><a href="${esc(x.url)}" target="_blank" rel="noopener">Open the source ↗</a></p>`).join('') || '<p>No card on file.</p>'}</div><p class="note" style="margin-top:10px">The studies on this card are real. The rooms, conversations and numbers you meet on campus were made up for the game.</p>`, footer: '<button class="btn primary" data-close>File the card</button>' });
     if (first) { v.collect.cards.push(id); SA.Progress.bonus(3, 'Archive card collected'); SA.Audio.sfx('page'); SA.Progress.check(); }
   }
   function library() {
@@ -135,7 +135,7 @@
     if (!G.enc.id) return colloquium();
     const first = !v.collect.stamps.includes(w.key); if (first) { v.collect.stamps.push(w.key); SA.Audio.sfx('stamp'); SA.Progress.bonus(3, 'Landmark stamp'); SA.Progress.check(); }
     const b = w.pois.landmark.b, cv = b ? R.thumb(b, 1.3) : null;
-    const el = SA.UI.modal({ title: def.landmark.name, kicker: `${def.name} · landmark stamp${first ? ' added' : ''}`, cls: 'narrow', body: `<div id="lm-pic" style="text-align:center;margin-bottom:8px"></div><p style="font-family:var(--serif);font-size:1.1em;line-height:1.5">${esc(def.notes[0])}</p>${lm ? `<p class="small">${lm.yearBuilt ? 'Built ' + esc(lm.yearBuilt) + '. ' : ''}${esc(lm.material || '')}.</p>` : ''}<p class="small muted">A compact reconstruction for play: footprints, distances and interiors are designed, not surveyed.</p>`, footer: '<button class="btn primary" data-close>Onward</button>' });
+    const el = SA.UI.modal({ title: def.landmark.name, kicker: `${def.name} · landmark stamp${first ? ' added' : ''}`, cls: 'narrow', body: `<div id="lm-pic" style="text-align:center;margin-bottom:8px"></div><p style="font-family:var(--serif);font-size:1.1em;line-height:1.5">${esc(def.notes[0])}</p>${lm ? `<p class="small">${lm.yearBuilt ? 'Built ' + esc(lm.yearBuilt) + '. ' : ''}${esc(lm.material || '')}.</p>` : ''}<p class="small muted">The campus has been squeezed to fit a game. Don’t find your way around the real one by it.</p>`, footer: '<button class="btn primary" data-close>Onward</button>' });
     if (cv) { cv.style.maxWidth = '100%'; cv.style.height = 'auto'; el.querySelector('#lm-pic').appendChild(cv); }
   }
   function workshop() {
@@ -145,7 +145,7 @@
   }
   function hubTalk(k) {
     const v = s(), n = (v.quests['hubn:' + k] = (v.quests['hubn:' + k] || 0) + 1), lines = HUBTALK[k], text = lines[(n - 1) % lines.length];
-    SA.UI.modal({ title: G.world.pois[k].label, kicker: 'Bellwether · a resident speaks', cls: 'narrow', body: `<p style="font-family:var(--serif);font-size:1.15em;line-height:1.55">${esc(text)}</p><p class="small muted">An invented voice. One remark is an anecdote; your notebook is for what could test it.</p>`, footer: '<button class="btn primary" data-close>Note it down</button>' });
+    SA.UI.modal({ title: G.world.pois[k].label, kicker: 'Bellwether · a resident speaks', cls: 'narrow', body: `<p style="font-family:var(--serif);font-size:1.15em;line-height:1.55">${esc(text)}</p><p class="small muted">An invented resident. One remark proves nothing, but it is worth writing down.</p>`, footer: '<button class="btn primary" data-close>Note it down</button>' });
     if (!v.quests['hub:' + k]) { v.quests['hub:' + k] = 1; SA.Progress.bonus(3, 'A resident’s account'); if (k === 'gate') say('gate'); } SA.persist(); objective();
   }
   function colloquium() {
@@ -186,7 +186,14 @@
     if (G.mode === 'play' && G.enc && G.enc.id === id) return; storeFog();
     if (G.mode === 'play') SA.Progress.travelEvent(go); else go();
   };
-  G.toMenu = () => { storeFog(); G.mode = 'menu'; G.task = null; SA.Audio.ambienceStop(); SA.UI.closeModal(true); SA.UI.title(); if (SA.Audio.ctx) SA.Music.play('menu'); };
+  let menuCam = null;
+  function backdrop() {                                          // the title screen looks out over a campus at the end of the afternoon
+    const pool = ['oxford', 'rochester', 'cambridge', 'stanford', 'harvard', 'princeton', 'kyoto', 'duke'].filter((k) => SA.Campuses[k]), def = SA.Campuses[pool[Math.floor(Math.random() * pool.length)]];
+    const world = SA.World.generate(def, { year: 2000, season: def.season || 'autumn', variant: 0 }), lm = world.pois.landmark || world.spawn;
+    G.world = world; G.enc = null; R.setWorld(world); R.revealAll(); cast = new SA.Actors.Cast(world, { people: 18 }); G.cast = cast; bubbles = []; near = null; dest = null;
+    menuCam = { x: lm.x + 5, y: lm.y + 1 }; R.zoom = zoomTo = innerWidth < 760 ? 0.9 : 1.2; R.centre(menuCam.x, menuCam.y); G.hour = 17.4;
+  }
+  G.toMenu = () => { storeFog(); G.mode = 'menu'; G.task = null; SA.Audio.ambienceStop(); SA.UI.closeModal(true); SA.UI.title(); if (SA.Audio.ctx) SA.Music.play('menu'); try { backdrop(); } catch (e) { G.world = null; } };
   G.continueJourney = () => { const v = s(); if (!v.started) return G.newJourney(); G.travel(v.current); };
   G.newJourney = () => {
     const begin = () => { const keep = s().settings; SA.save = SA.blankSave(); SA.save.settings = keep; intro(); };
@@ -332,6 +339,7 @@
   function frame(ms) {
     const dt = Math.min(0.05, (ms - last) / 1000 || 0); last = ms; G.t += dt;
     try {
+      if (G.world && G.mode === 'menu' && menuCam) { cast.update(dt, null, G.t); const p = R.C(menuCam.x + Math.cos(G.t * 0.05) * 5, menuCam.y + Math.sin(G.t * 0.04) * 4); R.cam.x += (p.x - R.cam.x) * 0.02; R.cam.y += (p.y - R.cam.y) * 0.02; R.draw({ t: G.t, hour: 17.4, daynight: true, reduced: s().settings.reduced, player: null, actors: cast.list, marks: [] }); }
       if (G.world && G.mode === 'play') {
         update(dt); const st = s().settings, state = { t: G.t, hour: G.hour, daynight: st.daynight, reduced: st.reduced, player, actors: actors(), overlay, screen, marks: marks() };
         R.draw(state); R.minimap($('#mini'), state); SA.UI.frame(G.t);

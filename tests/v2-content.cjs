@@ -1,6 +1,6 @@
 const path=require('path');global.window=global;global.performance={now:()=>0};global.document={createElement:()=>({getContext:()=>new Proxy({}, {get:()=>()=>({addColorStop(){}})}),width:0,height:0}),getElementById:()=>null};
 const d=path.resolve(__dirname, '..', 'dist');
-for(const f of ['legacy/data.js','legacy/landmarks.js','legacy/challenge.js','js/core.js','js/props.js','js/worldgen.js','js/campuses.js','js/encounters.js'])require(path.join(d,f));
+for(const f of ['legacy/data.js','legacy/landmarks.js','legacy/challenge.js','js/core.js','js/voice.js','js/props.js','js/worldgen.js','js/campuses.js','js/encounters.js'])require(path.join(d,f));
 const SA=window.SA;SA.save=SA.blankSave();SA.UI={toast(){},modal(){}};SA.Audio={sfx(){},ctx:null};
 global.AudioContext=undefined;
 for(const f of ['js/music.js','js/mentors.js','js/progress.js','js/tasks.js','js/labs2.js','js/pack2.js'])require(path.join(d,f));

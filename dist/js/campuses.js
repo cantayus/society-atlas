@@ -381,7 +381,7 @@
     name: 'University of Chicago', short: 'Chicago', city: 'Chicago', colors: ['#7a2b2b', '#b9b3a2'],
     wall: '#a9a696', roof: '#6b5a4e', style: 'gothic', path: 5, plaza: 5, trees: ['elm', 'oak', 'lime'], treeDensity: 0.08, season: 'winter',
     landmark: { name: 'Rockefeller Chapel', style: 'endTowers' },
-    notes: ['Grey Gothic quadrangles with gargoyles on every corner.', 'A frozen pond, a long sunken green, and a famously serious sense of fun.'],
+    notes: ['Gray Gothic quadrangles with gargoyles on every corner.', 'A frozen pond, a long sunken green, and a famously serious sense of fun.'],
     plan(P, v, T) {
       frame(P, T, {});
       P.fill(5, 46, 46, 3, T.FIELD);                                                    // the Midway
@@ -526,7 +526,7 @@
     name: 'Paris School of Economics', short: 'Paris', city: 'Paris', colors: ['#2a4a8a', '#c7483a'],
     wall: '#d8ccb0', roof: '#6f7780', style: 'hall', path: 6, plaza: 5, trees: ['lime', 'lime', 'elm', 'cherry'], treeDensity: 0.06,
     landmark: { name: 'Campus Jourdan', style: 'urban' },
-    notes: ['Cream stone and grey zinc roofs along a boulevard with a tramway.', 'Café tables on the pavement and a park with a lake across the street.'],
+    notes: ['Cream stone and gray zinc roofs along a boulevard with a tramway.', 'Café tables on the pavement and a park with a lake across the street.'],
     plan(P, v, T) {
       frame(P, T, { roadS: 34, track: true });
       plaza(P, T, 20, 27, 9, 5, T.STONE); P.prop('kiosk', 22, 28); P.poi('directory', 22, 29, 'South-plaza directory'); P.prop('table', 26, 28); P.poi('workshop', 26, 29, 'Campus workshop');
