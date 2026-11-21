@@ -5,7 +5,7 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const path=require('node:path');
 const vm=require('node:vm');
-const dist=path.resolve(__dirname,'../dist');
+const dist=path.resolve(__dirname,'../../dist/legacy');
 const read=file=>fs.readFileSync(path.join(dist,file),'utf8');
 const json=file=>JSON.parse(read(file));
 

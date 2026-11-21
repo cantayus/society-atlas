@@ -1,7 +1,7 @@
 const fs = require('fs');
 const assert = require('assert');
 global.window = {};
-require('../dist/research.js');
+require('../dist/legacy/research.js');
 const T=window.Research._test;
 assert.deepStrictEqual(T.neighborhood(11),T.neighborhood(11));
 assert.deepStrictEqual(T.runNeighborhood(T.neighborhood(11),.4,11),T.runNeighborhood(T.neighborhood(11),.4,11));

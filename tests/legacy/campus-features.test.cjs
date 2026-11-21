@@ -5,7 +5,7 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const path=require('node:path');
 const vm=require('node:vm');
-const dist=path.resolve(__dirname,'../dist');
+const dist=path.resolve(__dirname,'../../dist/legacy');
 const read=name=>fs.readFileSync(path.join(dist,name),'utf8');
 const copy=value=>JSON.parse(JSON.stringify(value));
 const iso=(x,y)=>({x:(x-y)*30,y:(x+y)*15});

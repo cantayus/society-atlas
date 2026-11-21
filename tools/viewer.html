@@ -1,0 +1,20 @@
+<!doctype html>
+<meta charset="utf-8"><title>Campus viewer (development)</title>
+<style>html,body{margin:0;height:100%;background:#12161a;overflow:hidden}canvas{display:block;width:100vw;height:100vh}</style>
+<canvas id="c"></canvas>
+<script src="../dist/legacy/data.js"></script><script src="../dist/legacy/landmarks.js"></script><script src="../dist/legacy/architecture.js"></script>
+<script src="../dist/js/core.js"></script><script src="../dist/js/props.js"></script><script src="../dist/js/worldgen.js"></script><script src="../dist/js/campuses.js"></script><script src="../dist/js/render.js"></script><script src="../dist/js/actors.js"></script>
+<script>
+/* Development viewer: ?uni=penn&zoom=1&x=24&y=30&hour=12&season=autumn&year=1896&fog=0 */
+const q=new URLSearchParams(location.search),SA=window.SA,def=SA.Campuses[q.get('uni')||'penn'];
+const visit={year:+(q.get('year')||2000),office:'Research rooms',season:q.get('season')||def.season||'autumn',variant:+(q.get('variant')||0)};
+const world=SA.World.generate(def,visit),R=SA.Render;R.init(document.getElementById('c'));R.setWorld(world);
+if(q.get('fog')!=='1')R.revealAll();else R.reveal(world.spawn.x,world.spawn.y,9);
+R.zoom=+(q.get('zoom')||1);R.centre(+(q.get('x')||world.N/2),+(q.get('y')||world.N/2));
+const cast=new SA.Actors.Cast(world,{}),player={x:world.spawn.x,y:world.spawn.y};
+const look={...SA.Actors.lookFor(3,2020),scarf:'#c7483a',bag:'#7a5230',top:'#3f5a7a',ring:'#ffe08a',front:true};
+let last=0,t=0;window.frames_=0;
+function frame(ms){const dt=Math.min(.05,(ms-last)/1000);last=ms;t+=dt;cast.update(dt,player,t);
+ R.draw({t,hour:+(q.get('hour')||12),player,actors:[...cast.list,{x:player.x,y:player.y,always:true,draw:(c,tt)=>SA.Actors.person(c,look,tt)}]});window.frames_++;requestAnimationFrame(frame);}
+requestAnimationFrame(frame);
+</script>

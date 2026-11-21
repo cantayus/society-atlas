@@ -1,6 +1,6 @@
 const test=require('node:test');
 const assert=require('node:assert/strict');
-const Challenge=require('../dist/challenge.js');
+const Challenge=require('../../dist/legacy/challenge.js');
 
 function rig(record={}){let time=1000;const events=[];const controller=Challenge.create(record,{now:()=>time,onChange:(snapshot,event)=>events.push({snapshot,event})});return{record,events,controller,advance(ms){time+=ms;},setTime(ms){time=ms;}};}
 

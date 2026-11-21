@@ -5,7 +5,7 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const path=require('node:path');
 const vm=require('node:vm');
-const dist=path.resolve(__dirname,'../dist');
+const dist=path.resolve(__dirname,'../../dist/legacy');
 function load(){
   const elements=new Map(),events={},writes=[],storage=new Map(),frames=[],noop=()=>{};
   const ctx=new Proxy({},{get:(o,k)=>o[k]||noop,set:(o,k,v)=>(o[k]=v,true)});
