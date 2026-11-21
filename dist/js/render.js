@@ -193,8 +193,10 @@
   }
   function buildingSprite(b, i) {
     const left = iso(b.x, b.y + b.h).x, right = iso(b.x + b.w, b.y).x, top = iso(b.x, b.y).y, bottom = iso(b.x + b.w, b.y + b.h).y;
-    const bbox = { x0: left - 24, x1: right + 60, y0: top - (b.height || 60) - 150, y1: bottom + 26 };
+    const sig = SA.Signature && SA.Signature.has(b);
+    const bbox = { x0: left - (sig ? 70 : 24), x1: right + (sig ? 70 : 60), y0: top - (sig ? 430 : (b.height || 60) + 150), y1: bottom + (sig ? 60 : 26) };
     return spriteFor('b' + i, bbox, (c) => {
+      if (sig) { SA.Signature.draw(c, b, R.world); return; }
       const env = archEnv(c);
       if (!(window.CampusArchitecture && window.CampusArchitecture.draw(c, b, env))) env.box(b.x, b.y, b.w, b.h, b.height || 60, b.wall, b.roof);
       detail(c, b, env);
@@ -374,7 +376,7 @@
   R.resize = () => {
     dpr = Math.min(2, window.devicePixelRatio || 1); W = canvas.clientWidth || window.innerWidth; H = canvas.clientHeight || window.innerHeight;
     canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
-    const want = Math.min(2, Math.max(1, dpr * 1.25)); if (want !== S) { S = want; chunks.clear(); sprites.clear(); }
+    const want = Math.min(2, Math.max(1.3, dpr * 1.3)); if (want !== S) { S = want; chunks.clear(); sprites.clear(); }
   };
   R.setWorld = (world, exploredBits) => {
     R.world = world; chunks = new Map(); sprites = new Map(); order = buildOrder(world);
@@ -504,6 +506,19 @@
     m.restore();
   };
   R.miniToTile = (cv, px, py) => { const N = R.world.N, w = cv.clientWidth, h = cv.clientHeight, k = w / (N * 2), X = (px - w / 2) / k, Y = py / (k * (h / w)); return { x: (X + Y) / 2, y: (Y - X) / 2 }; };
+  // A stand-alone picture of one building, for the title screen and the atlas.
+  R.thumb = (b, scale = 1, colors) => {
+    const keep = R.world, keepS = S; R.world = { season: 'summer', visit: { year: 2000 }, def: { colors: colors || ['#7a2f2f', '#e0bd6c'] } }; S = scale;
+    const d = { x: 0, y: 0, height: 60, type: 'office', style: 'hall', wall: '#a96a50', roof: '#626268', ...b }, left = iso(0, d.h).x, right = iso(d.w, 0).x, bottom = iso(d.w, d.h).y;
+    const sig = SA.Signature && SA.Signature.has(d), bbox = { x0: left - (sig ? 70 : 10), x1: right + (sig ? 70 : 10), y0: sig ? -430 : -(d.height) - 150, y1: bottom + (sig ? 60 : 8) }, cv = document.createElement('canvas'); cv.width = Math.ceil((bbox.x1 - bbox.x0) * S); cv.height = Math.ceil((bbox.y1 - bbox.y0) * S);
+    const c = cv.getContext('2d'); c.setTransform(S, 0, 0, S, -bbox.x0 * S, -bbox.y0 * S); const env = archEnv(c);
+    if (sig) SA.Signature.draw(c, d, R.world); else { if (!(window.CampusArchitecture && window.CampusArchitecture.draw(c, d, env))) env.box(0, 0, d.w, d.h, d.height, d.wall, d.roof); detail(c, d, env); }
+    R.world = keep; S = keepS;
+    // trim empty rows at the top
+    const img = c.getImageData(0, 0, cv.width, cv.height).data; let x0 = cv.width, x1 = 0, y0 = cv.height, y1 = 0;
+    for (let y = 0; y < cv.height; y += 2) for (let x = 0; x < cv.width; x += 2) if (img[(y * cv.width + x) * 4 + 3] > 8) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+    if (x1 <= x0 || y1 <= y0) return cv; const out = document.createElement('canvas'); out.width = x1 - x0 + 4; out.height = y1 - y0 + 4; out.getContext('2d').drawImage(cv, -x0 + 2, -y0 + 2); return out;
+  };
   R.C = C;
   SA.Render = R;
 })();

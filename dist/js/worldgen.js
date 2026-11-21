@@ -218,16 +218,15 @@
       if (near(x, y, BUILT)) { if (r > 0.97 && !winter) P.prop('tuft', x, y); continue; }
       if (r < dens) { P.prop(pick(x, y), x, y, { snow: winter }); if (autumn && !byWalk) P.prop('leaves', x + 0.3, y + 0.4); }
       else if (winter) { if (r > 0.99) P.prop('rock', x, y); }
-      else if (r > 0.965) P.prop('bush', x, y, cl > 0.55 ? {} : { pal: 'lime' });
-      else if (r > 0.94) P.prop(def.wild || 'flowers', x, y, { cols: [['#d9624e', '#f1e9d8'], ['#e7c35a', '#f1e9d8', '#d98f7a'], ['#9b6fb5', '#f1e9d8'], ['#f1e9d8', '#e7c35a']][Math.floor(r * 1000) % 4] });
-      else if (r > 0.9) P.prop('tuft', x, y);
-      else if (r > 0.89) P.prop(autumn ? 'leaves' : 'mushrooms', x, y);
-      else if (r > 0.885) P.prop('rock', x, y);
+      else if (r > 0.975) P.prop('bush', x, y, cl > 0.55 ? {} : { pal: 'lime' });
+      else if (r > 0.968 && def.wild) P.prop(def.wild, x, y);
+      else if (r > 0.93) P.prop('tuft', x, y);
+      else if (r > 0.92 && autumn) P.prop('leaves', x, y);
     }
     for (const b of P.buildings) {
       for (let x = b.x; x < b.x + b.w; x++) {
         const fy = b.y + b.h; if (x === b.door.x || Math.abs(x - b.door.x) === 1) continue;
-        if (P.in(x, fy) && GREEN.has(P.get(x, fy)) && !P.taken(x, fy)) P.prop(winter ? 'bush' : SA.hash(x, fy, 2) > 0.5 ? 'flowers' : 'bush', x, fy - 0.05, {});
+        if (P.in(x, fy) && GREEN.has(P.get(x, fy)) && !P.taken(x, fy)) { if (SA.hash(x, fy, 2) > 0.45) P.prop(!winter && SA.hash(x, fy, 3) > 0.8 ? 'flowers' : 'bush', x, fy - 0.05, {}); }
       }
       const sx = b.x + b.w; for (let y = b.y + 1; y < b.y + b.h; y += 2) if (P.in(sx, y) && GREEN.has(P.get(sx, y)) && !P.taken(sx, y)) P.prop('bush', sx, y);
     }
@@ -237,7 +236,6 @@
     for (const b of P.buildings) {
       const d = b.door, big = b.type === 'landmark' || b.type === 'secondary';
       for (const dx of [-2, 2]) if (freeGreen(d.x + dx, d.y) || (P.in(d.x + dx, d.y) && PATHLIKE.has(P.get(d.x + dx, d.y)) && !P.taken(d.x + dx, d.y) && big)) P.prop(big ? 'topiary' : 'planter', d.x + dx, d.y - 0.15, { flower: !winter && SA.hash(d.x, d.y, 8) > 0.4 });
-      if (autumn && SA.hash(b.x, b.y, 31) > 0.45 && freeGreen(d.x - 1, d.y + 1)) P.prop('pumpkins', d.x - 1, d.y + 1);
       if (winter && freeGreen(d.x + 1, d.y + 1)) P.prop('snowpile', d.x + 1, d.y + 1);
       const rx = b.x - 1, ry = b.y + Math.floor(b.h / 2);
       if (freeGreen(rx, ry) && SA.hash(b.x, b.y, 32) > 0.4) P.prop(year >= 1950 ? 'bikes' : SA.hash(b.x, b.y, 33) > 0.5 ? 'crates' : 'barrel', rx, ry);
@@ -250,13 +248,10 @@
       else if (t === T.FOREST && !P.taken(x, y) && !P.block[k]) { if (r < 0.1) P.prop(winter ? 'snowpile' : 'fern', x, y); else if (r < 0.13) P.prop('log', x, y); else if (r < 0.16) P.prop('stump', x, y); else if (r < 0.2 && !winter) P.prop('mushrooms', x, y); }
       else if (GREEN.has(t) && !P.block[k] && !P.taken(x, y) && !P.keep[k]) {
         const byPlaza = near(x, y, HARDT, 1);
-        if (byPlaza && r < 0.16 && !winter) P.prop(r < 0.06 ? 'flowerbush' : 'flowers', x, y, { cols: [['#e58fb0', '#f1e9d8'], ['#e7c35a', '#f1e9d8'], ['#9b6fb5', '#f3c6d1'], ['#d9624e', '#f1e9d8']][Math.floor(r * 400) % 4] });
+        if (byPlaza && r < 0.05 && !winter) P.prop(r < 0.02 ? 'flowerbush' : 'flowers', x, y, { cols: [['#e58fb0', '#f1e9d8'], ['#e7c35a', '#f1e9d8'], ['#9b6fb5', '#f3c6d1'], ['#d9624e', '#f1e9d8']][Math.floor(r * 400) % 4] });
         else if (!byPlaza && !near(x, y, PATHLIKE, 1) && !near(x, y, BUILT, 2)) {
-          if (r > 0.9965 && !winter) P.prop('picnicgroup', x, y, { col: ['#b8483a', '#3b5f8a', '#49683b'][Math.floor(r * 3000) % 3] });
-          else if (r > 0.993 && !winter) P.prop('reader', x, y);
-          else if (r > 0.9915) P.prop('birdbath', x, y);
-          else if (r > 0.99 && !winter) P.prop('easel', x, y);
-          else if (r > 0.986 && winter) P.prop('snowpile', x, y);
+          if (r > 0.9975 && !winter) P.prop('reader', x, y);                    // the odd student on the grass, nothing more
+          else if (r > 0.99 && winter) P.prop('snowpile', x, y);
         }
       } else if (t === T.WALK && !P.taken(x, y)) {
         const nextToRoad = near(x, y, new Set([T.ROAD, T.TRACK]), 1);

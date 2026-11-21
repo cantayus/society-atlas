@@ -72,26 +72,32 @@
     name: 'Harvard University', short: 'Harvard', city: 'Cambridge, Massachusetts', colors: ['#913c46', '#d9c9aa'],
     wall: '#a96a50', roof: '#626268', path: 3, plaza: 4, trees: ['elm', 'elm', 'oak', 'lime'], treeDensity: 0.1,
     landmark: { name: 'Widener Library', style: 'columns' },
-    notes: ['The Yard, with its web of diagonal paths under tall elms.', 'A seated bronze whose shoe visitors rub for luck, and rowing shells on the river.'],
+    notes: ['Widener’s columns face Memorial Church across the lawn of Tercentenary Theatre, with white University Hall between the two yards.', 'A seated bronze outside University Hall whose shoe visitors rub for luck; rowing shells on the Charles beyond.'],
+    // The map looks south: the Science Center plaza is at the bottom, the river at the top, the Old Yard to the right.
     plan(P, v, T) {
       frame(P, T, {});
-      P.river('y', 47, 5, 1.2); P.line(42, 30, 53, 30, 2, T.STONE);
-      entry(P, T, 24, 44);
-      P.build(17, 6, 12, 6, { type: 'landmark', style: 'columns', height: 74, role: 'landmark', name: 'Widener Library' });
-      hall(P, 20, 21, 8, 4, 'University Hall', { wall: '#c9c5b6', roof: '#5b6067', height: 56 });
-      P.build(6, 34, 6, 4, { type: 'archive', role: 'archive', name: 'University Archives', height: 50 });
-      P.build(33, 33, 6, 5, { type: 'library', role: 'library', name: 'Lamont Library', height: 56 });
-      for (const [x, y, n] of [[6, 8, 'Hollis Hall'], [6, 16, 'Stoughton Hall'], [6, 25, 'Holworthy Hall'], [34, 15, 'Sever Hall'], [34, 24, 'Emerson Hall']]) hall(P, x, y, 5, 5, n, { height: 58 });
-      P.build(32, 4, 7, 5, { type: 'secondary', style: 'endTowers', wall: '#9a4f3f', roof: '#4b4a52', height: 66, name: 'Memorial Hall' });
-      office(P, 41, 8, 5, 5, v, { style: 'urban', wall: '#c9c2b0', roof: '#7b7d7a', height: 96 });
-      plaza(P, T, 20, 14, 8, 2, T.BRICK);
-      for (const [a, b] of [[[24, 44], [13, 14]], [[24, 44], [33, 14]], [[12, 30], [33, 20]], [[12, 20], [33, 31]], [[12, 14], [33, 14]], [[24, 44], [24, 26]], [[12, 38], [40, 38]]]) P.line(a[0], a[1], b[0], b[1], 1, T.GRAVEL);
-      P.path([40, 38], [43, 14], 1, T.GRAVEL, 'x'); P.path([39, 30], [42, 30], 1, T.GRAVEL);
-      P.prop('statue', 24, 26, { figure: 'seated', shoe: true }); P.thing('shoe', 24, 27, 'Rub the bronze shoe');
-      P.prop('gatepost', 19, 49); P.prop('gatepost', 29, 49); P.row('fence', 6, 49, 17, 49, 2, { col: '#3b3f3c' }); P.row('fence', 31, 49, 40, 49, 2, { col: '#3b3f3c' });
-      P.boats.push({ x: 49, y: 18, len: 20, axis: 'y' }, { x: 50, y: 36, len: 9, axis: 'y' });
-      P.prop('bikes', 30, 39); P.prop('bikes', 13, 31);
-      P.pois.task = { x: 13, y: 27, w: 9, h: 9 };
+      P.river('x', 5, 3, 0.8); P.fill(27, 4, 2, 6, T.BRIDGE); P.boats.push({ x: 16, y: 6, len: 16, axis: 'x' }, { x: 40, y: 6, len: 10, axis: 'x' });
+      entry(P, T, 26, 44);
+      P.build(20, 12, 12, 6, { type: 'landmark', style: 'columns', height: 74, role: 'landmark', name: 'Widener Library' });
+      for (let i = 0; i < 3; i++) P.fill(21, 18 + i, 10, 1, i % 2 ? T.STONE : T.SAND);               // Widener's broad steps
+      P.fill(19, 21, 15, 11, T.GRASS); P.reserve(20, 22, 13, 9);                                     // Tercentenary Theatre
+      P.build(22, 33, 8, 4, { type: 'secondary', style: 'cupola', wall: '#a96a50', roof: '#5b6067', height: 58, name: 'Memorial Church' });
+      hall(P, 11, 20, 6, 9, 'Sever Hall', { height: 60, wall: '#9d5a45' });
+      hall(P, 36, 20, 5, 10, 'University Hall', { wall: '#c9c5b6', roof: '#5b6067', height: 56 });
+      P.prop('statue', 42, 24, { figure: 'seated', shoe: true, col: '#5d6f62' }); P.thing('shoe', 43, 24, 'Rub the bronze shoe');
+      hall(P, 46, 13, 6, 4, 'Massachusetts Hall', { height: 52 }); hall(P, 46, 28, 6, 4, 'Harvard Hall', { height: 54 });
+      hall(P, 46, 35, 6, 4, 'Hollis Hall', { height: 52 }); hall(P, 37, 36, 7, 4, 'Holworthy Hall', { height: 52 });
+      P.prop('gatepost', 52, 21); P.prop('gatepost', 52, 25); P.row('fence', 52, 12, 52, 19, 2, { col: '#3b3f3c' }); P.row('fence', 52, 27, 52, 40, 2, { col: '#3b3f3c' });
+      P.build(13, 11, 5, 4, { type: 'archive', role: 'archive', name: 'University Archives', height: 48 });
+      P.build(4, 15, 6, 5, { type: 'library', role: 'library', name: 'Lamont Library', style: 'urban', wall: '#b9856a', height: 54 });
+      P.build(9, 40, 8, 5, { type: 'secondary', style: 'endTowers', wall: '#9a4f3f', roof: '#4b4a52', height: 64, name: 'Memorial Hall' });
+      office(P, 4, 31, 5, 5, v, { style: 'urban', wall: '#d5d0c2', roof: '#8a8c88', height: 104 });
+      // the Yard's web of walks
+      for (const [a, b] of [[[26, 44], [26, 38]], [[20, 21], [33, 31]], [[33, 21], [20, 31]], [[26, 21], [26, 31]], [[18, 26], [35, 26]], [[42, 14], [51, 33]], [[51, 14], [42, 33]], [[42, 23], [52, 23]], [[18, 32], [35, 32]], [[18, 20], [35, 20]]]) P.line(a[0], a[1], b[0], b[1], 1, T.GRAVEL);
+      P.fill(18, 20, 1, 13, T.GRAVEL); P.fill(35, 20, 1, 18, T.GRAVEL); P.fill(42, 12, 1, 28, T.GRAVEL); P.path([26, 38], [35, 38], 1, T.GRAVEL); P.path([35, 34], [42, 34], 1, T.GRAVEL);
+      P.path([18, 30], [10, 34], 1, T.GRAVEL); P.path([9, 37], [20, 44], 1, T.GRAVEL, 'y'); P.path([18, 16], [16, 16], 1, T.GRAVEL); P.path([10, 20], [12, 17], 1, T.GRAVEL, 'y');
+      P.prop('bikes', 31, 43); P.prop('bikes', 34, 39);
+      P.pois.task = { x: 20, y: 22, w: 13, h: 9 };
     },
   });
 
@@ -583,6 +589,7 @@
     24: { uni: 'harvard', variant: 3, hour: 11 }, 25: { uni: 'chicago' }, 26: { uni: 'michigan', variant: 1, season: 'winter' }, 27: { uni: 'princeton', variant: 1, season: 'spring' },
     28: { uni: 'yale' }, 29: { uni: 'paris' }, 30: { uni: 'duke' }, 0: { uni: 'bellwether', hour: 18 },
   };
+  SA.CampusKit = { def, frame, plaza, entry, hall, alley, office };
   SA.Campuses = C;
   SA.VISITS = VISITS;
   SA.visitFor = (enc) => {

@@ -1,0 +1,10 @@
+<!doctype html><meta charset="utf-8"><title>Signature buildings (development)</title>
+<style>body{margin:0;background:#7f9a5c;font:12px system-ui;color:#111}#g{display:flex;flex-wrap:wrap;gap:6px;padding:8px;align-items:flex-end}figure{margin:0;text-align:center;background:rgba(255,255,255,.12);padding:4px;border-radius:6px}figcaption{font-weight:600}</style>
+<div id="g"></div>
+<script src="../dist/legacy/data.js"></script><script src="../dist/legacy/landmarks.js"></script><script src="../dist/legacy/architecture.js"></script>
+<script src="../dist/js/core.js"></script><script src="../dist/js/props.js"></script><script src="../dist/js/worldgen.js"></script><script src="../dist/js/campuses.js"></script><script src="../dist/js/signature.js"></script><script src="../dist/js/pack2.js"></script><script src="../dist/js/render.js"></script>
+<script>
+const q=new URLSearchParams(location.search),only=(q.get('only')||'').split('|').filter(Boolean),sc=+(q.get('s')||1),g=document.getElementById('g');window.errs=[];
+for(const k of Object.keys(SA.Campuses)){const def=SA.Campuses[k],w=SA.World.generate(def,{year:2000,season:q.get('season')||def.season||'autumn'});
+ for(const b of w.buildings){if(!SA.Signature.has(b))continue;if(only.length&&!only.includes(b.name))continue;try{const cv=SA.Render.thumb({...b,x:0,y:0},sc,def.colors);const f=document.createElement('figure');f.appendChild(cv);cv.style.width=cv.width/sc*(+(q.get('z')||1))+'px';const c=document.createElement('figcaption');c.textContent=def.short+' · '+b.name;f.appendChild(c);g.appendChild(f);}catch(e){window.errs.push(b.name+': '+e.message);}}}
+</script>
