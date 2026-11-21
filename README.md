@@ -19,3 +19,7 @@ Export your journey from the Field Notebook before moving from another host, the
 Media credits, individual license notices, architectural references and quotation sources are included in `dist/assets/` and the in-game notebook. The deployment guide retains the portrait redistribution notes. `Verification.txt` records checks on the approved build before this GitHub publication.
 
 Run `node --test tests/*.test.cjs` and `node tools/check-research.cjs` for the included checks. Deployment and future custom-domain instructions are in `DEPLOYMENT.txt`.
+
+## Second edition (V2)
+
+The branch `v2-upgrade` holds the second edition: an isometric campus game with 27 universities, 37 research encounters, mentors, fieldwork, original music and signature buildings. It is a static site with no build step; open `dist/index.html`. The first edition is kept unchanged at `dist/legacy/` and linked from the title page. See `docs/PROGRESS.md` for what is built and what still needs the owner, and `docs/NEW_ENCOUNTERS_REVIEW.md` for sources to confirm.
