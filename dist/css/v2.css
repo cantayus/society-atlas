@@ -297,3 +297,8 @@ body.reduced .plaque { animation: none; opacity: 1; }
 #menu .board h1 { color: var(--gold); font-style: italic; letter-spacing: .01em; }
 #menu .quote { transition: opacity .5s; max-width: 380px; }
 #menu .quote.swap { opacity: 0; }
+
+#howto { min-height: 250px; }
+#howto p, #howto li { line-height: 1.65; margin: 0 0 12px; }
+#howto ol { padding-left: 1.3em; margin: 0 0 12px; }
+#howto kbd { display: inline-block; min-width: 1.7em; padding: 1px 7px; margin: 0 2px; text-align: center; font: 600 .86em var(--sans); color: #2a2014; background: linear-gradient(#f3e6c2, #d9c48f); border: 1px solid #8a6a35; border-bottom-width: 3px; border-radius: 5px; }

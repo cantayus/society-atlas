@@ -256,9 +256,18 @@
   };
   UI.titleClose = () => { clearInterval(UI._quotes); $('#menu').classList.remove('open'); $('#menu').innerHTML = ''; };
   UI.tutorial = () => {
-    if (!window.AtlasTutorial) { UI.toast('The tutorial is unavailable.'); return; }
-    let ctl = null; const el = UI.modal({ title: 'Before the journey', kicker: 'Hands-on practice from the first edition', cls: 'wide', body: '<div class="paper"><div id="tut"></div></div><p class="note" style="margin-top:10px">This practice room comes from the first edition and teaches the research steps. Movement in V2 also offers running (Shift), zoom and the minimap.</p>', onClose: () => ctl?.destroy?.() });
-    ctl = window.AtlasTutorial.mount($('#tut', el), { reduced: save().settings.reduced, keys: save().settings.keys, onComplete: () => { save().tutorial.completed = true; SA.persist(); } });
+    const K = save().settings.keys, k = (t) => `<kbd>${esc(String(t).toUpperCase())}</kbd>`;
+    const pages = [
+      ['Getting around', `<p>Click or tap where you want to go and you will walk there. ${k(K.up)}${k(K.left)}${k(K.down)}${k(K.right)} or the arrow keys work too. Hold <kbd>Shift</kbd> to hurry.</p><p>Drag the map to look around and scroll to zoom. ${k(K.center)} brings the view back to you. The small map in the corner shows the whole campus, and you can click it to look somewhere else.</p><p>When you are next to something you can use, a prompt appears at the bottom of the screen. Press ${k(K.interact)}, or click the thing itself.</p>`],
+      ['A visit, step by step', `<ol><li><b>Read the directory</b> on the south plaza. It tells you where things are.</li><li><b>Find the office.</b> A gold arrow floats over it, and it shows in gold on the small map.</li><li><b>Do the fieldwork.</b> The scholar sends you out first. Gold markers show where to go. Press ${k(K.interact)} at each one.</li><li><b>Solve the research problem</b> back at the office.</li></ol><p>The panel at the top left always shows the next step. If you are stuck, your mentor waits on the plaza and will tell you what to do.</p>`],
+      ['The research problem', `<p>Each problem is a small experiment that you run yourself. First say what you expect to happen. Then run the comparison the brief describes and read what comes out.</p><p>To finish, tick the box about how far the result goes and choose a sensible next step for Bellwether. Hints cost nothing. Five wrong answers end the attempt, and you can try again.</p><p>Solving a problem quickly the first time earns more points: 100 within two minutes, 50 within five, and 25 after that.</p>`],
+      ['The Atlas, the notebook and things to find', `<p><kbd>M</kbd> opens the Atlas, where you choose the next campus. <kbd>N</kbd> opens your notebook, with the evidence you have gathered, your collections and the sources behind every visit.</p><p>Each campus also hides a few things: five field sketches that glint on the ground, a stamp at the landmark, a card in the archive and two secrets. You can ignore all of them.</p><p><kbd>Space</kbd> pauses. Options has the sound levels, larger text, your walking speed and how much your mentors talk. Relaxed mode there turns off the timers in fieldwork. Your progress is saved in this browser as you go.</p>`],
+    ];
+    let i = 0; const show = () => { el.querySelector('h2').textContent = pages[i][0]; $('#howto', el).innerHTML = pages[i][1]; $('#howto-n', el).textContent = `${i + 1} of ${pages.length}`; $('[data-act=back]', el).disabled = i === 0; $('[data-act=next]', el).textContent = i === pages.length - 1 ? 'Got it' : 'Next'; };
+    const el = UI.modal({ title: pages[0][0], kicker: 'Learn to play', cls: 'narrow', body: '<div id="howto"></div>', footer: '<span class="small muted" id="howto-n" style="margin-right:auto"></span><button class="btn" data-act="back">Back</button><button class="btn primary" data-act="next">Next</button>',
+      on: { back: () => { i = Math.max(0, i - 1); show(); }, next: () => { if (i === pages.length - 1) { save().tutorial.completed = true; SA.persist(); UI.closeModal(); } else { i++; show(); } } } });
+    show();
   };
+
   SA.UI = UI;
 })();

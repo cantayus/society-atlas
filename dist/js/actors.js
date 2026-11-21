@@ -11,7 +11,7 @@
 
   // A small standing or walking figure. o: {skin,hair,top,bot,era,hat,bag,scarf,long,front,flip,walk,scale,ring}
   function person(c, o, t) {
-    const k = o.scale || 1, ph = o.walk ? Math.sin(t * (o.run ? 15 : 10) + (o.seed || 0)) : 0, bob = o.walk ? Math.abs(ph) * 1.1 : Math.sin(t * 1.6 + (o.seed || 0)) * 0.25;
+    const k = o.scale || 1, ph = o.walk ? Math.sin(t * (o.run ? 12.5 : o.stroll ? 6.2 : 8.4) + (o.seed || 0)) : 0, bob = o.walk ? Math.abs(ph) * 1.1 : Math.sin(t * 1.6 + (o.seed || 0)) * 0.25;
     c.save(); c.scale(k * (o.flip ? -1 : 1), k);
     if (o.ring) { c.strokeStyle = o.ring; c.lineWidth = 1.6; c.beginPath(); c.ellipse(0, 1, 11, 5, 0, 0, TAU); c.stroke(); }
     ell(c, 2, 1.5, 7, 2.8, 'rgba(20,30,18,.3)');
@@ -79,7 +79,7 @@
       for (let i = 0; i < count && free.length; i++) {
         const [x, y] = free[Math.floor(this.rand() * free.length)];
         const look = lookFor(world.seed + i * 17, this.year, winter ? 'winter' : null);
-        this.list.push({ kind: 'npc', id: 'n' + i, x, y, look, path: [], wait: this.rand() * 6, speed: 1.5 + this.rand() * 0.9, line: i % 4 === 0 ? i : null, front: true, flip: false });
+        this.list.push({ kind: 'npc', id: 'n' + i, x, y, look, path: [], wait: this.rand() * 6, speed: 0.7 + this.rand() * 0.4, line: i % 4 === 0 ? i : null, front: true, flip: false });
       }
       // squirrels and birds on the lawns
       const lawn = []; for (let y = 5; y < N - 5; y++) for (let x = 5; x < N - 5; x++) if (seen[y * N + x] && SA.World.GREEN.has(world.terrain[y * N + x])) lawn.push([x, y]);
@@ -92,8 +92,8 @@
       // traffic
       for (const r of world.roads) {
         const n = this.year < 1925 ? 1 : 3;
-        for (let i = 0; i < n; i++) { const dir = i % 2 ? -1 : 1; this.list.push({ kind: 'car', id: 'c' + r.at + i, axis: r.axis, lane: r.at + (dir > 0 ? 0 : r.width - 1), pos: this.rand() * N, dir, speed: (this.year < 1925 ? 1.6 : 3.4) + this.rand() * 1.4, col: ['#6b7f8c', '#8c4a3f', '#4f6a52', '#c9c0aa', '#3f4a5c', '#a88a4a'][Math.floor(this.rand() * 6)], x: 0, y: 0, always: false }); }
-        if (r.track) this.list.push({ kind: 'tram', id: 't' + r.at, axis: r.axis, lane: r.at, pos: -6, dir: 1, speed: 2.6, x: 0, y: 0, stop: 0 });
+        for (let i = 0; i < n; i++) { const dir = i % 2 ? -1 : 1; this.list.push({ kind: 'car', id: 'c' + r.at + i, axis: r.axis, lane: r.at + (dir > 0 ? 0 : r.width - 1), pos: this.rand() * N, dir, speed: (this.year < 1925 ? 1.0 : 1.9) + this.rand() * 0.7, col: ['#6b7f8c', '#8c4a3f', '#4f6a52', '#c9c0aa', '#3f4a5c', '#a88a4a'][Math.floor(this.rand() * 6)], x: 0, y: 0, always: false }); }
+        if (r.track) this.list.push({ kind: 'tram', id: 't' + r.at, axis: r.axis, lane: r.at, pos: -6, dir: 1, speed: 1.6, x: 0, y: 0, stop: 0 });
       }
       for (const b of world.boats || []) this.list.push({ kind: 'boat', id: 'bt' + b.x + b.y, ...b, x0: b.x, y0: b.y, ph: this.rand() * TAU, x: b.x, y: b.y });
       // ducks on the water
@@ -103,7 +103,7 @@
     }
     bind(a) {
       const self = this;
-      if (a.kind === 'npc') a.draw = (c, t) => person(c, { ...a.look, front: a.front, flip: a.flip, walk: a.path.length > 0, talk: a.line !== null && a.line !== undefined && !a.path.length && !a.piper, emote: a.emote || (a.piper ? 'note' : null) }, t);
+      if (a.kind === 'npc') a.draw = (c, t) => person(c, { ...a.look, front: a.front, flip: a.flip, walk: a.path.length > 0, stroll: true, talk: a.line !== null && a.line !== undefined && !a.path.length && !a.piper, emote: a.emote || (a.piper ? 'note' : null) }, t);
       else if (a.kind === 'squirrel') a.draw = (c, t) => squirrel(c, a, t);
       else if (a.kind === 'bird') a.draw = (c, t) => bird(c, a, t);
       else if (a.kind === 'cat') a.draw = (c, t) => cat(c, a, t);
@@ -123,11 +123,11 @@
           else if ((a.wait -= dt) <= 0) {
             const bell = this.bell > 0, pool = bell || this.rand() < 0.6 ? this.anchors : this.free, tgt = pool[Math.floor(this.rand() * pool.length)];
             if (tgt) { const path = w.findPath(a.x, a.y, tgt[0], tgt[1]); if (path && path.length < 70) a.path = path; }
-            a.wait = 2 + this.rand() * (bell ? 3 : 9);
+            a.wait = 3 + this.rand() * (bell ? 4 : 12);
           }
         } else if (a.kind === 'squirrel') {
           const near = player && Math.hypot(player.x - a.x, player.y - a.y) < 2.2;
-          if (a.moving) { const dx = a.tx - a.x, dy = a.ty - a.y, d = Math.hypot(dx, dy), st = dt * 5; a.flip = dx - dy < 0; if (d <= st) { a.x = a.tx; a.y = a.ty; a.moving = false; a.wait = 1 + this.rand() * 5; } else { a.x += (dx / d) * st; a.y += (dy / d) * st; } }
+          if (a.moving) { const dx = a.tx - a.x, dy = a.ty - a.y, d = Math.hypot(dx, dy), st = dt * 3.2; a.flip = dx - dy < 0; if (d <= st) { a.x = a.tx; a.y = a.ty; a.moving = false; a.wait = 2 + this.rand() * 7; } else { a.x += (dx / d) * st; a.y += (dy / d) * st; } }
           else if ((a.wait -= dt) <= 0 || (near && !a.tame)) { const [x, y] = this.lawn[Math.floor(this.rand() * this.lawn.length)]; if (Math.hypot(x - a.x, y - a.y) < 9) { a.tx = x; a.ty = y; a.moving = true; } else a.wait = 0.2; }
         } else if (a.kind === 'bird') {
           const near = player && Math.hypot(player.x - a.x, player.y - a.y) < 2.4;
@@ -144,7 +144,7 @@
       }
       if (this.bell > 0) this.bell -= dt;
     }
-    ringBell() { this.bell = 14; for (const a of this.list) if (a.kind === 'npc' && !a.fixed) a.wait = Math.min(a.wait, this.rand() * 2); }
+    ringBell() { this.bell = 14; for (const a of this.list) if (a.kind === 'npc' && !a.fixed) a.wait = Math.min(a.wait, this.rand() * 8); }
   }
 
   SA.Actors = { person, emote, lookFor, squirrel, bird, cat, dog, Cast, SKIN, HAIR, TOPS };

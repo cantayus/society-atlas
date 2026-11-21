@@ -1,7 +1,7 @@
 # The Society Atlas — notes for Claude Code
 
 - Static site, no build step, no dependencies. `dist/` is what the "Publish browser game" workflow deploys. Do not run that workflow or push to `main` unless asked.
-- `dist/legacy/` is the first edition, frozen. Never edit it. V2 loads eight of its modules at runtime (data, landmarks, architecture, challenge, research, quotes, campus-play, tutorial).
+- `dist/legacy/` is the first edition, frozen. Never edit it. V2 loads seven of its modules at runtime (data, landmarks, architecture, challenge, research, quotes, campus-play). Learn to Play is written for V2 in `dist/js/ui.js` and no longer uses the first edition's tutorial.
 - V2 lives in `dist/index.html`, `dist/css/v2.css`, `dist/js/*.js`. Script order is in `index.html`; everything hangs off `window.SA`.
 - Add a campus or an encounter in `dist/js/pack2.js` (it shows the whole pattern: plan, visit, encounter, sources, task, secrets, music, lab). Give a famous building a recipe in `dist/js/signature.js`, keyed by the building's name.
 - Saves: V2 uses `society-atlas-v2`; the V1 key `society-atlas-v1` is read once for migration and never written.

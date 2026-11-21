@@ -33,8 +33,21 @@
   const visitKey = () => G.world.key + ':' + (G.world.visit.variant || 0);
   const sketchKey = () => G.world.key + ':' + G.enc.id;
   const spriteLook = (f, extra) => ({ seed: 3, skin: f.skin, hair: f.hair, top: f.top, bot: '#3b4150', longHair: f.style === 'long' || f.style === 'bob', glasses: !!f.glasses, scarf: f.accent, ...extra });
-  const say = (trigger, vars, opts) => SA.Mentors.say(trigger, { campus: G.world.def.short, era: G.enc.era, ...vars }, opts);
+  const SEEN = new Set(['water', 'cat', 'squirrel', 'birds', 'tram']);
+  const say = (trigger, vars, opts) => (SEEN.has(trigger) && Math.hypot(player.x - companion.x, player.y - companion.y) > 10) ? false : SA.Mentors.say(trigger, { campus: G.world.def.short, era: G.enc.era, ...vars }, opts);
   function nearestFree(x, y, r = 4) { const w = G.world; x = Math.round(x); y = Math.round(y); if (w.walkable(x, y)) return { x, y }; let best = null, bd = 1e9; for (let dy = -r; dy <= r; dy++) for (let dx = -r; dx <= r; dx++) if (w.walkable(x + dx, y + dy)) { const d = dx * dx + dy * dy + (dy > 0 || dx > 0 ? -0.5 : 0); if (d < bd) { bd = d; best = { x: x + dx, y: y + dy }; } } return best; }
+  // where the mentor waits: on paving a few steps from where you arrive, clear of the directory and the doors
+  function mentorSpot() {
+    const w = G.world, sp = w.spawn, P = w.pois, T = w.T, keep = [P.directory, P.office, P.archive, P.library, P.landmark, P.workshop, P.festival, P.gate, P.eastbank, ...w.interact].filter(Boolean); let best = null, bs = 1e9;
+    for (let dy = -6; dy <= 6; dy++) for (let dx = -6; dx <= 6; dx++) {
+      const x = sp.x + dx, y = sp.y + dy, d = Math.hypot(dx, dy); if (d < 1.8 || !w.walkable(x, y)) continue;
+      const tt = w.tile(x, y); if (tt === T.ROAD || tt === T.TRACK || tt === T.CROSS || tt === T.WATER || tt === T.BRIDGE) continue;
+      const near = Math.min(9, ...keep.map((p) => Math.hypot(p.x - x, p.y - y)));
+      const score = Math.abs(d - 2.6) + (near < 3 ? (3 - near) * 5 : 0) + (SA.World.GREEN.has(tt) ? 1.2 : 0) + (dx + dy > 0 ? 0.5 : 0);
+      if (score < bs) { bs = score; best = { x, y }; }
+    }
+    return best || nearestFree(sp.x - 2, sp.y - 1, 3) || sp;
+  }
   function bubble(a, text, ms = 5200) { bubbles = bubbles.filter((b) => b.a !== a); bubbles.push({ a, text, until: performance.now() + ms }); }
 
   // ---------- entering a campus ----------
@@ -43,7 +56,7 @@
     const world = SA.World.generate(def, { year: enc.year, office: enc.office, season: visit.season || def.season || 'autumn', variant: visit.variant || 0 });
     G.enc = enc; G.world = world; G.task = null; G.challenge = null; G.mode = 'play'; G.paused = false; G.mentor = SA.Mentors.mentorFor(id); G.hour = visit.hour || 9.5; lastHour = Math.floor(G.hour);
     R.setWorld(world); R.revealAll();
-    player.x = world.spawn.x; player.y = world.spawn.y; player.path = []; player.trail = []; companion.x = player.x - 0.8; companion.y = player.y + 0.6; R.reveal(player.x, player.y, 9); lastTile = -1;
+    player.x = world.spawn.x; player.y = world.spawn.y; player.path = []; { const m = mentorSpot(); companion.x = m.x; companion.y = m.y; } R.reveal(player.x, player.y, 9); lastTile = -1;
     cast = new SA.Actors.Cast(world, { people: id ? 22 : 26 }); G.cast = cast; bubbles = []; near = null; pending = null; dest = null; flags = {}; follow = true; fx = []; opening = false;
     // distance to water, for the ambience
     const N = world.N; waterMap = new Uint8Array(N * N).fill(255); const q = []; for (let i = 0; i < N * N; i++) if (world.terrain[i] === world.T.WATER) { waterMap[i] = 0; q.push(i); }
@@ -91,6 +104,7 @@
     const eggs = SA.Progress.EGGS[w.key] || [];
     for (const th of w.interact) { const i = eggs.findIndex((e) => e.thing === th.kind); add(th.x, th.y, th.label || 'Look closer', () => { if (!id && th.kind === 'gate' && (!v.quests['hub:gate'] || v.collect.pokes[w.key + ':' + i])) return hubTalk('gate'); if (i < 0 || !SA.Progress.eggFound(w.key, i)) SA.UI.toast('Nothing new here. Still worth the look.', 2200); }, 2.1); }
     eggs.forEach((e, i) => { if (!e.prop || v.collect.pokes[w.key + ':' + i]) return; const p = w.props.find((q) => q.k === e.prop); if (p) add(p.x, p.y, 'Look closer', () => SA.Progress.eggFound(w.key, i), 2.3); });
+    add(companion.x, companion.y, `Ask ${SA.Mentors.get(G.mentor).name.split(' ')[0]} what to do`, askMentor, 1.8, 0.5);
     for (const a of cast.list) {
       if (a.kind === 'npc' && (a.line !== null && a.line !== undefined || a.piper)) add(a.x, a.y, a.piper ? 'Listen to the piper' : 'Talk', () => talk(a), 1.7, -0.2);
       else if (a.kind === 'cat') add(a.x, a.y, 'Greet the cat', () => petCat(a), 1.7);
@@ -100,6 +114,17 @@
     return out.sort((a, b) => a.d - b.d);
   }
   function interact() { if (G.pauseInput || G.mode !== 'play') return; const c = near || candidates()[0]; if (!c) { SA.Audio.sfx('blip', 300); return; } idleT = 0; c.fn(); SA.UI.refresh(); }
+  function askMentor() {
+    const enc = G.enc, v = s(); let t;
+    if (!enc.id) {
+      const names = { festival: 'the festival ground', gate: 'the evening gate', eastbank: 'Eastbank' }, left = ['festival', 'gate', 'eastbank'].filter((k) => !v.quests['hub:' + k]).map((k) => names[k]);
+      t = left.length ? `People are waiting to be heard at ${left.length > 1 ? left.slice(0, -1).join(', ') + ' and ' + left[left.length - 1] : left[0]}. Follow the gold arrow.` : !v.quests['hub:board'] ? 'You have heard all three. Go over your hypotheses at Fellowship House.' : v.completed.length >= 18 && !v.proposal ? 'You have enough methods now. The colloquium is at the Town Hall.' : 'Nothing is pressing here. Open the Atlas with M and pick a campus.';
+    } else {
+      const st = stage();
+      t = st === 0 ? 'Start with the directory. It is the board right here on the plaza.' : st === 1 ? 'Find the office the directory named. The gold arrow points to its door.' : st === 2 ? (G.task && !G.task.done ? 'Finish the fieldwork first. Walk to each gold marker and press E.' : 'Go back to the office. There is fieldwork to do before the research problem.') : st === 3 ? 'Take what you found back to the office and work the research problem.' : 'You are done here. Stay as long as you like, then open the Atlas with M.';
+    }
+    SA.Audio.sfx('blip', 520); SA.Mentors.clear(); say('note', { note: t }, { force: true });
+  }
   function talk(a) {
     const v = s(), w = G.world;
     if (a.piper) { SA.Audio.sfx('pipes'); bubble(a, '♪ ♫ ♪', 4200); const i = (SA.Progress.EGGS[w.key] || []).findIndex((e) => e.event === 'piper'); if (i >= 0) SA.Progress.eggFound(w.key, i); return; }
@@ -209,7 +234,7 @@
   }
   function mentors() {
     const M = SA.Mentors;
-    const el = SA.UI.modal({ title: 'Your mentors', kicker: 'Senior PhD students of the fellowship', cls: 'wide', sticky: true, body: `<div class="grid g3">${Object.values(M.all).map((m) => `<div class="card" style="text-align:center"><canvas class="mface" data-m="${m.key}" width="220" height="220" style="width:110px;height:110px;border-radius:16px;border:1.5px solid var(--gold)"></canvas><h3 style="margin-top:8px">${esc(m.name)}</h3><div class="small muted">${esc(m.year)}</div><p class="small">${esc(m.bio)}</p></div>`).join('')}</div><p class="small muted" style="margin-top:12px">Whoever knows a campus best walks it with you and speaks up when it helps. Set how talkative they are in Settings. They are invented characters.</p>`,
+    const el = SA.UI.modal({ title: 'Your mentors', kicker: 'Senior PhD students of the fellowship', cls: 'wide', sticky: true, body: `<div class="grid g3">${Object.values(M.all).map((m) => `<div class="card" style="text-align:center"><canvas class="mface" data-m="${m.key}" width="220" height="220" style="width:110px;height:110px;border-radius:16px;border:1.5px solid var(--gold)"></canvas><h3 style="margin-top:8px">${esc(m.name)}</h3><div class="small muted">${esc(m.year)}</div><p class="small">${esc(m.bio)}</p></div>`).join('')}</div><p class="small muted" style="margin-top:12px">Whoever knows a campus best waits for you on the plaza and speaks up when it helps. Ask them if you are stuck. Set how talkative they are in Settings. They are invented characters.</p>`,
       footer: '<button class="btn primary" data-act="go">Open the Atlas at Philadelphia, 1896</button>', on: { go: () => { SA.UI.closeModal(true); s().started = true; s().createdAt = new Date().toISOString(); SA.persist(true); G.travel(1); } } });
     el.querySelectorAll('.mface').forEach((c) => M.portrait(c.getContext('2d'), M.get(c.dataset.m).face, 'pleased', 1, 220, false));
   }
@@ -247,14 +272,14 @@
   }
   function hotspots() {                                          // things worth a click
     const w = G.world, out = [], P = w.pois; for (const k of ['directory', 'office', 'archive', 'library', 'landmark', 'workshop', 'festival', 'eastbank']) if (P[k]) out.push({ x: P[k].x, y: P[k].y });
-    for (const th of w.interact) out.push({ x: th.x, y: th.y }); if (G.task && !G.task.done) for (const st of G.task.visible()) out.push({ x: st.x, y: st.y });
+    out.push({ x: companion.x, y: companion.y }); for (const th of w.interact) out.push({ x: th.x, y: th.y }); if (G.task && !G.task.done) for (const st of G.task.visible()) out.push({ x: st.x, y: st.y });
     for (const a of cast.list) if ((a.kind === 'npc' && a.line !== null && a.line !== undefined) || a.kind === 'cat' || a.piper) out.push({ x: a.x, y: a.y });
     return out;
   }
 
   // ---------- update ----------
   function movePlayer(dt) {
-    const w = G.world, K = s().settings.keys, sp = 4.3 * (s().settings.speed || 1) * (keys.has('shift') ? 1.65 : 1);
+    const w = G.world, K = s().settings.keys, sp = 3.2 * (s().settings.speed || 1) * (keys.has('shift') ? 1.7 : 1);
     let vx = 0, vy = 0; if (keys.has(K.up) || keys.has('arrowup')) { vx -= 1; vy -= 1; } if (keys.has(K.down) || keys.has('arrowdown')) { vx += 1; vy += 1; } if (keys.has(K.left) || keys.has('arrowleft')) { vx -= 1; vy += 1; } if (keys.has(K.right) || keys.has('arrowright')) { vx += 1; vy -= 1; }
     const ox = player.x, oy = player.y; player.run = keys.has('shift');
     if (vx || vy) {
@@ -268,11 +293,9 @@
     if (player.walk) {
       player.front = dx + dy > 0 || (dx + dy === 0 && player.front); if (Math.abs(dx - dy) > 0.0005) player.flip = dx - dy < 0; idleT = 0; s().stats.steps += moved;
       stepT -= moved; if (stepT <= 0) { stepT = player.run ? 1.25 : 0.95; const tt = w.tile(Math.round(player.x), Math.round(player.y)), T = w.T; const surface = w.season === 'winter' && SA.World.GREEN.has(tt) ? 'snow' : SA.World.GREEN.has(tt) ? 'grass' : tt === T.BRIDGE ? 'wood' : tt === T.GRAVEL || tt === T.DIRT || tt === T.SAND ? 'gravel' : 'stone'; SA.Audio.sfx('step', surface); stepSide = -stepSide; fx.push({ k: surface === 'snow' || tt === T.SAND ? 'print' : 'puff', surface, x: player.x, y: player.y, t: G.t, side: stepSide, run: player.run }); if (fx.length > 80) fx.shift(); }
-      player.trail.push({ x: player.x, y: player.y }); if (player.trail.length > 26) player.trail.shift();
     }
-    // the mentor walks a few steps behind
-    const tr = player.trail[Math.max(0, player.trail.length - 22)] || { x: player.x - 0.8, y: player.y + 0.6 }, cdx = tr.x - companion.x, cdy = tr.y - companion.y, cd = Math.hypot(cdx, cdy);
-    companion.walk = cd > 0.12 && player.walk; if (cd > 6) { companion.x = tr.x; companion.y = tr.y; } else if (cd > 0.05) { const stp = Math.min(cd, sp * dt * (cd > 2 ? 1.4 : 1)); companion.x += (cdx / cd) * stp; companion.y += (cdy / cd) * stp; companion.front = cdx + cdy > 0; if (Math.abs(cdx - cdy) > 0.01) companion.flip = cdx - cdy < 0; }
+    // the mentor waits on the plaza and turns to watch you go
+    const mdx = player.x - companion.x, mdy = player.y - companion.y; companion.walk = false; companion.front = mdx + mdy > 0; if (Math.abs(mdx - mdy) > 0.3) companion.flip = mdx - mdy < 0;
   }
   function discoveries() {
     const w = G.world, v = s(), tx = Math.round(player.x), ty = Math.round(player.y), tile = ty * w.N + tx;
@@ -332,6 +355,7 @@
   function screen(c) {                                           // names, the objective arrow and speech, after the lighting
     const w = G.world, t = G.t, now = performance.now(), tg = target(), z = R.zoom, P = w.pois;
     for (const k of ['office', 'archive', 'library', 'landmark', 'directory', 'festival', 'gate', 'eastbank']) { const p = P[k]; if (!p || !p.label || !R.isExplored(p.x, p.y)) continue; const isT = tg === p, d = Math.hypot(p.x - player.x, p.y - player.y); if (!isT && d > 9) continue; const q = R.tileToScreen(p.x, p.y, p.b ? p.b.height * 0.9 + 46 : 58); c.globalAlpha = isT ? 1 : clamp((9 - d) / 3, 0, 1) * 0.92; pill(c, q.x, q.y, p.label, isT ? { bold: true, line: '#e0b04a', col: '#ffe9b0', size: 12 } : {}); c.globalAlpha = 1; }
+    if (G.mode === 'play') { const d = Math.hypot(companion.x - player.x, companion.y - player.y); if (d < 9) { const q = R.tileToScreen(companion.x, companion.y, 42); c.globalAlpha = clamp((9 - d) / 3, 0, 1) * 0.92; pill(c, q.x, q.y, SA.Mentors.get(G.mentor).name.split(' ')[0]); c.globalAlpha = 1; } }
     if (tg) { const q = R.tileToScreen(tg.x, tg.y, (tg.b ? tg.b.height * 0.9 + 46 : 58) + 24 / z), bob = Math.sin(t * 3) * 4; c.fillStyle = '#e0b04a'; c.strokeStyle = '#2a1f10'; c.lineWidth = 1.5; c.beginPath(); c.moveTo(q.x, q.y + 16 + bob); c.lineTo(q.x - 9, q.y + bob); c.lineTo(q.x + 9, q.y + bob); c.closePath(); c.fill(); c.stroke(); }
     bubbles = bubbles.filter((b) => b.until > now);
     for (const b of bubbles) { const q = R.tileToScreen(b.a.x, b.a.y, 58); c.font = '500 13px Georgia, serif'; const lines = wrap(c, b.text, 210), bw = Math.max(...lines.map((l) => c.measureText(l).width)) + 20, bh = lines.length * 17 + 12, x = clamp(q.x - bw / 2, 8, innerWidth - bw - 8), y = q.y - bh, a = clamp((b.until - now) / 400, 0, 1); c.globalAlpha = a; c.fillStyle = 'rgba(250,244,226,.97)'; c.strokeStyle = 'rgba(60,45,25,.55)'; c.lineWidth = 1; c.beginPath(); c.roundRect(x, y, bw, bh, 9); c.fill(); c.stroke(); c.beginPath(); c.moveTo(q.x - 6, y + bh - 0.5); c.lineTo(q.x, y + bh + 8); c.lineTo(q.x + 6, y + bh - 0.5); c.fillStyle = 'rgba(250,244,226,.97)'; c.fill(); c.fillStyle = '#2a2014'; c.textAlign = 'left'; lines.forEach((l, i) => c.fillText(l, x + 10, y + 19 + i * 17)); c.globalAlpha = 1; }
@@ -375,6 +399,6 @@
     SA.save = SA.loadSave(store); R.init($('#world')); SA.UI.init(); G.applySettings(); input(); G.toMenu(); requestAnimationFrame(frame);
     if (SA.save.importedV1 && !SA.save.quests.v1note) { SA.save.quests.v1note = 1; SA.UI.toast('<b>Your first-edition journey came with you.</b> The original save is untouched.', 7000); }
   };
-  G.player = player; G.effects = () => fx; SA.Game = G;
+  G.player = player; G.effects = () => fx; G.mentorAt = () => ({ x: companion.x, y: companion.y }); SA.Game = G;
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', G.boot); else G.boot();
 })();
