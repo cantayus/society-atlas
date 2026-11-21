@@ -25,3 +25,7 @@ These nineteen encounters were written for the second edition. The research anch
 | 37 | Barry Wellman | Toronto, 1979 | Personal network surveys | ✱ doi 10.1086/226906 |
 
 Campus secrets ("easter eggs") retell campus lore lightly and say so in the game. They are worth a read by someone who knows each campus.
+
+## Title-screen quotations
+
+`dist/js/quotes2.js` adds 33 quotations to the first edition's two. They were typed from memory and not checked against the originals, and each links to the author's Wikiquote page instead of a primary source. Please check wording, work and year before publishing, and swap in primary links where you have them. Three are translations (Aristotle, Laplace, Pasteur), two use modern spelling for an older text (Newton, Petty), and one is a line spoken by a fictional character (Sherlock Holmes).

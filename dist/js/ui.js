@@ -225,7 +225,7 @@
   // ---------- title screen: a campus at dusk behind a board of carved plaques ----------
   const CREST = '<svg viewBox="0 0 64 72" aria-hidden="true"><path d="M32 3l25 8v22c0 17-11 29-25 36C18 62 7 50 7 33V11z" fill="#6d2a2a" stroke="#d9b565" stroke-width="2.5"/><path d="M14 31c6-3 12-3 18 0 6-3 12-3 18 0v18c-6-3-12-3-18 0-6-3-12-3-18 0z" fill="#f3e4bd" stroke="#8a6a35" stroke-width="1.5"/><path d="M32 31v18" stroke="#8a6a35" stroke-width="1.5"/><path d="M32 11l2.4 5.6L40 19l-5.6 2.4L32 27l-2.4-5.6L24 19l5.6-2.4z" fill="#e7c672"/></svg>';
   UI.title = () => {
-    const s = save(), m = $('#menu'), qs = window.ATLAS_QUOTES?.menu || [], q = qs.length ? qs[Math.floor(Math.random() * qs.length)] : null;
+    const s = save(), m = $('#menu'), Q = (SA.QUOTES || []).slice(); for (let i = Q.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [Q[i], Q[j]] = [Q[j], Q[i]]; }
     const items = [
       { act: 'new', label: s.started ? 'New Journey' : 'Begin the Journey' },
       { act: 'continue', label: 'Continue', off: !s.started },
@@ -236,9 +236,9 @@
       { act: 'legacy', label: 'First Edition' },
     ];
     m.innerHTML = `<div class="shade"></div>
-      <div class="board"><div class="crest">${CREST}</div><h1>The Society <em>Atlas</em></h1>
+      <div class="board"><div class="crest">${CREST}</div><h1>The Society Atlas</h1>
         <nav class="plaques" aria-label="Main menu">${items.map((it, i) => `<button class="plaque" data-act="${it.act}" ${it.off ? 'disabled' : ''} style="animation-delay:${0.12 + i * 0.07}s"><span>${esc(it.label)}</span></button>`).join('')}</nav></div>
-      ${q ? `<blockquote class="quote glass">“${esc(q.text)}”<cite>${esc(q.author)} · <a href="${esc(q.source)}" target="_blank" rel="noopener" style="color:var(--gold)">source</a></cite></blockquote>` : ''}
+      ${Q.length ? '<blockquote class="quote glass swap"></blockquote>' : ''}
       <div class="foot"><span>Version ${SA.VERSION}</span><button data-act="credits">Sources &amp; credits</button></div>`;
     m.classList.add('open'); UI.hud(false);
     const btns = $$('.plaque', m), board = $('.board', m);
@@ -249,8 +249,12 @@
       if (a === 'new') g.newJourney(); else if (a === 'continue') g.continueJourney(); else if (a === 'atlas') UI.atlas(); else if (a === 'notebook') UI.notebook(); else if (a === 'settings') UI.settings(); else if (a === 'credits') UI.notebook('sources'); else if (a === 'tutorial') UI.tutorial();
       else if (a === 'legacy') { let w = null; try { w = window.open('legacy/index.html', '_blank'); } catch (e) { w = null; } if (!w) location.href = 'legacy/index.html'; } };
     const first = btns.find((b) => b.dataset.act === (s.started ? 'continue' : 'new')); if (first) first.focus({ preventScroll: true });
+    // a different saying every so often, never the same one twice running
+    const box = $('.quote', m); let qi = 0; clearInterval(UI._quotes);
+    const turn = () => { if (!box || !box.isConnected) { clearInterval(UI._quotes); return; } const q = Q[qi++ % Q.length]; box.classList.add('swap'); setTimeout(() => { box.innerHTML = `“${esc(q.text)}”<cite>${esc(q.author)}${q.work ? ', ' + esc(q.work) : ''} · <a href="${esc(q.source)}" target="_blank" rel="noopener" style="color:var(--gold)">source</a></cite>`; box.classList.remove('swap'); }, qi === 1 ? 0 : 500); };
+    if (box) { turn(); UI._quotes = setInterval(turn, 14000); }
   };
-  UI.titleClose = () => { $('#menu').classList.remove('open'); $('#menu').innerHTML = ''; };
+  UI.titleClose = () => { clearInterval(UI._quotes); $('#menu').classList.remove('open'); $('#menu').innerHTML = ''; };
   UI.tutorial = () => {
     if (!window.AtlasTutorial) { UI.toast('The tutorial is unavailable.'); return; }
     let ctl = null; const el = UI.modal({ title: 'Before the journey', kicker: 'Hands-on practice from the first edition', cls: 'wide', body: '<div class="paper"><div id="tut"></div></div><p class="note" style="margin-top:10px">This practice room comes from the first edition and teaches the research steps. Movement in V2 also offers running (Shift), zoom and the minimap.</p>', onClose: () => ctl?.destroy?.() });

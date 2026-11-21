@@ -7,6 +7,7 @@
   const G = { enc: null, world: null, hour: 9.5, mentor: 'ines', pauseInput: false, challenge: null, mode: 'boot', paused: false, task: null, t: 0 };
   const player = { x: 0, y: 0, path: [], front: true, flip: false, walk: false, run: false, trail: [] };
   const keys = new Set();
+  let fx = [], opening = false, stepSide = 1;
   let cast = null, follow = true, zoomTo = 1, pending = null, near = null, bubbles = [], dest = null, stepT = 0, saveT = 0, ambT = 0, nearT = 0, idleT = 0, lastHour = 0, waterMap = null, behind = null, flags = {}, lastTile = -1, companion = { x: 0, y: 0, front: true, flip: false, walk: false };
 
   // ---------- small talk (invented; nobody real is quoted) ----------
@@ -43,7 +44,7 @@
     G.enc = enc; G.world = world; G.task = null; G.challenge = null; G.mode = 'play'; G.paused = false; G.mentor = SA.Mentors.mentorFor(id); G.hour = visit.hour || 9.5; lastHour = Math.floor(G.hour);
     R.setWorld(world); R.revealAll();
     player.x = world.spawn.x; player.y = world.spawn.y; player.path = []; player.trail = []; companion.x = player.x - 0.8; companion.y = player.y + 0.6; R.reveal(player.x, player.y, 9); lastTile = -1;
-    cast = new SA.Actors.Cast(world, { people: id ? 22 : 26 }); G.cast = cast; bubbles = []; near = null; pending = null; dest = null; flags = {}; follow = true;
+    cast = new SA.Actors.Cast(world, { people: id ? 22 : 26 }); G.cast = cast; bubbles = []; near = null; pending = null; dest = null; flags = {}; follow = true; fx = []; opening = false;
     // distance to water, for the ambience
     const N = world.N; waterMap = new Uint8Array(N * N).fill(255); const q = []; for (let i = 0; i < N * N; i++) if (world.terrain[i] === world.T.WATER) { waterMap[i] = 0; q.push(i); }
     for (let h = 0; h < q.length; h++) { const i = q[h], d = waterMap[i]; if (d >= 8) continue; const x = i % N, y = (i - x) / N; for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) { const xx = x + dx, yy = y + dy; if (xx < 0 || yy < 0 || xx >= N || yy >= N) continue; const k = yy * N + xx; if (waterMap[k] > d + 1) { waterMap[k] = d + 1; q.push(k); } } }
@@ -81,10 +82,10 @@
     if (G.task && !G.task.done) { const st = G.task.near(px, py); if (st) add(st.x, st.y, G.task.verb(st), () => { G.task.visit(st); objective(); }, 2, 1); }
     const P = w.pois, id = G.enc.id;
     if (P.directory) add(P.directory.x, P.directory.y, id ? 'Read the directory' : 'Read the notice board', directory);
-    if (P.office) add(P.office.x, P.office.y, id ? `Knock: ${P.office.label}` : 'Enter Fellowship House', office, 1.9, 0.3);
-    if (P.archive) add(P.archive.x, P.archive.y, 'Visit the archive', archive);
-    if (P.library) add(P.library.x, P.library.y, 'Visit the library', library);
-    if (P.landmark) add(P.landmark.x, P.landmark.y, !id ? 'Enter the Town Hall' : v.collect.stamps.includes(w.key) ? `Admire ${P.landmark.label}` : `Stamp your atlas: ${P.landmark.label}`, landmark);
+    if (P.office) add(P.office.x, P.office.y, id ? `Knock: ${P.office.label}` : 'Enter Fellowship House', () => doorway(P.office, office), 1.9, 0.3);
+    if (P.archive) add(P.archive.x, P.archive.y, 'Visit the archive', () => doorway(P.archive, archive));
+    if (P.library) add(P.library.x, P.library.y, 'Visit the library', () => doorway(P.library, library));
+    if (P.landmark) add(P.landmark.x, P.landmark.y, !id ? 'Enter the Town Hall' : v.collect.stamps.includes(w.key) ? `Admire ${P.landmark.label}` : `Stamp your atlas: ${P.landmark.label}`, () => doorway(P.landmark, landmark));
     if (P.workshop) add(P.workshop.x, P.workshop.y, 'Try the workshop table', workshop);
     if (!id) for (const k of ['festival', 'eastbank']) add(P[k].x, P[k].y, 'Listen', () => hubTalk(k), 2.2);
     const eggs = SA.Progress.EGGS[w.key] || [];
@@ -117,7 +118,7 @@
   function office() {
     const v = s(), enc = G.enc;
     if (!enc.id) { v.quests['hub:board'] = 1; SA.persist(); objective(); SA.UI.notebook('hypotheses'); return; }
-    if (!v.found.includes(enc.id)) { v.found.push(enc.id); if (!v.clues.includes(enc.id)) v.clues.push(enc.id); SA.Audio.sfx('door'); say('office'); SA.persist(); } else SA.Audio.sfx('door');
+    if (!v.found.includes(enc.id)) { v.found.push(enc.id); if (!v.clues.includes(enc.id)) v.clues.push(enc.id); say('office'); SA.persist(); }
     objective(); SA.UI.meet(enc);
   }
   function archive() {
@@ -266,7 +267,7 @@
     const dx = player.x - ox, dy = player.y - oy, moved = Math.hypot(dx, dy); player.walk = moved > 0.0005;
     if (player.walk) {
       player.front = dx + dy > 0 || (dx + dy === 0 && player.front); if (Math.abs(dx - dy) > 0.0005) player.flip = dx - dy < 0; idleT = 0; s().stats.steps += moved;
-      stepT -= moved; if (stepT <= 0) { stepT = player.run ? 1.25 : 0.95; const tt = w.tile(Math.round(player.x), Math.round(player.y)), T = w.T; SA.Audio.sfx('step', w.season === 'winter' && SA.World.GREEN.has(tt) ? 'snow' : SA.World.GREEN.has(tt) ? 'grass' : tt === T.BRIDGE ? 'wood' : tt === T.GRAVEL || tt === T.DIRT || tt === T.SAND ? 'gravel' : 'stone'); }
+      stepT -= moved; if (stepT <= 0) { stepT = player.run ? 1.25 : 0.95; const tt = w.tile(Math.round(player.x), Math.round(player.y)), T = w.T; const surface = w.season === 'winter' && SA.World.GREEN.has(tt) ? 'snow' : SA.World.GREEN.has(tt) ? 'grass' : tt === T.BRIDGE ? 'wood' : tt === T.GRAVEL || tt === T.DIRT || tt === T.SAND ? 'gravel' : 'stone'; SA.Audio.sfx('step', surface); stepSide = -stepSide; fx.push({ k: surface === 'snow' || tt === T.SAND ? 'print' : 'puff', surface, x: player.x, y: player.y, t: G.t, side: stepSide, run: player.run }); if (fx.length > 80) fx.shift(); }
       player.trail.push({ x: player.x, y: player.y }); if (player.trail.length > 26) player.trail.shift();
     }
     // the mentor walks a few steps behind
@@ -306,8 +307,25 @@
   // ---------- drawing on top of the world ----------
   function pill(c, x, y, text, o = {}) { c.font = `${o.bold ? '700' : '600'} ${o.size || 11}px system-ui, sans-serif`; c.textAlign = 'center'; const w = c.measureText(text).width + 14, h = (o.size || 11) + 8; c.fillStyle = o.bg || 'rgba(20,17,13,.84)'; c.beginPath(); c.roundRect(x - w / 2, y - h, w, h, 6); c.fill(); if (o.line) { c.strokeStyle = o.line; c.lineWidth = 1.2; c.stroke(); } c.fillStyle = o.col || '#f1e7cf'; c.fillText(text, x, y - 6); }
   function wrap(c, text, max) { const words = text.split(' '), lines = []; let line = ''; for (const w of words) { const t = line ? line + ' ' + w : w; if (c.measureText(t).width > max && line) { lines.push(line); line = w; } else line = t; } if (line) lines.push(line); return lines; }
+  // dust at the feet, prints in snow and sand, lamplight spilling from an opened door
+  function underlay(c) {
+    const now = G.t; fx = fx.filter((f) => now - f.t < (f.k === 'print' ? 8 : f.k === 'door' ? 1.7 : 0.55));
+    for (const f of fx) {
+      const a = now - f.t, p = R.C(f.x, f.y);
+      if (f.k === 'puff') { const k = a / 0.55, col = f.surface === 'grass' ? '128,158,96' : f.surface === 'wood' ? '176,146,104' : f.surface === 'gravel' ? '206,192,160' : '196,190,176', n = f.run ? 4 : 3; for (let i = 0; i < n; i++) { c.fillStyle = `rgba(${col},${(1 - k) * (f.surface === 'stone' ? 0.28 : 0.46)})`; c.beginPath(); c.ellipse(p.x + f.side * 3 + (i - 1) * (3 + k * 7), p.y + 4 - k * (4 + i * 2), 1.8 + k * (f.run ? 5 : 3.6), 1.2 + k * 2.2, 0, 0, 7); c.fill(); } }
+      else if (f.k === 'print') { c.fillStyle = f.surface === 'snow' ? `rgba(96,116,140,${0.34 * (1 - a / 8)})` : `rgba(120,96,60,${0.3 * (1 - a / 8)})`; c.beginPath(); c.ellipse(p.x + f.side * 3.2, p.y + 3, 3.2, 1.7, f.side * 0.3, 0, 7); c.fill(); }
+      else if (f.k === 'door') { const k = Math.min(1, a / 0.3) * (a > 1.1 ? Math.max(0, 1 - (a - 1.1) / 0.6) : 1), g = c.createRadialGradient(p.x, p.y - 4, 2, p.x, p.y, 52); g.addColorStop(0, `rgba(255,214,140,${0.55 * k})`); g.addColorStop(1, 'rgba(255,214,140,0)'); c.fillStyle = g; c.beginPath(); c.ellipse(p.x, p.y, 52, 26, 0, 0, 7); c.fill(); }
+    }
+  }
+  function doorway(poi, then) {                                  // the door swings in, light falls on the step, then you are inside
+    if (opening) return; if (!poi || !poi.b) { then(); return; } opening = true; SA.Audio.sfx('door'); fx.push({ k: 'door', x: poi.x, y: poi.y, b: poi.b, t: G.t });
+    setTimeout(() => { opening = false; if (G.mode === 'play') { then(); SA.UI.refresh(); } }, 430);
+  }
   function overlay(c) {                                          // rings on the ground, in world space
     const t = G.t;
+    for (const f of fx) if (f.k === 'door') { const a = t - f.t, k = Math.min(1, a / 0.3) * (a > 1.1 ? Math.max(0, 1 - (a - 1.1) / 0.6) : 1), b = f.b, w0 = SA.iso(b.door.x + 0.2, b.y + b.h), w1 = SA.iso(b.door.x + 0.8, b.y + b.h), h = 24, mid = { x: w0.x + (w1.x - w0.x) * (1 - 0.82 * k), y: w0.y + (w1.y - w0.y) * (1 - 0.82 * k) };
+      c.fillStyle = `rgba(255,206,128,${0.9 * k})`; c.beginPath(); c.moveTo(w0.x, w0.y); c.lineTo(w1.x, w1.y); c.lineTo(w1.x, w1.y - h); c.lineTo(w0.x, w0.y - h); c.closePath(); c.fill();
+      c.fillStyle = '#4a2f1e'; c.strokeStyle = 'rgba(20,12,6,.7)'; c.lineWidth = 1; c.beginPath(); c.moveTo(w0.x, w0.y); c.lineTo(mid.x, mid.y); c.lineTo(mid.x, mid.y - h); c.lineTo(w0.x, w0.y - h); c.closePath(); c.fill(); c.stroke(); }
     if (dest) { const p = R.C(dest.x, dest.y), k = (t * 1.6) % 1; c.strokeStyle = `rgba(255,224,138,${0.9 - k * 0.7})`; c.lineWidth = 2; c.beginPath(); c.ellipse(p.x, p.y, 10 + k * 12, 5 + k * 6, 0, 0, 7); c.stroke(); }
     if (near && !G.pauseInput) { const q = R.C(near.x, near.y); c.strokeStyle = 'rgba(255,240,200,.85)'; c.lineWidth = 1.6; c.setLineDash([5, 4]); c.lineDashOffset = -t * 14; c.beginPath(); c.ellipse(q.x, q.y, 22, 11, 0, 0, 7); c.stroke(); c.setLineDash([]); }
   }
@@ -341,7 +359,7 @@
     try {
       if (G.world && G.mode === 'menu' && menuCam) { cast.update(dt, null, G.t); const p = R.C(menuCam.x + Math.cos(G.t * 0.05) * 5, menuCam.y + Math.sin(G.t * 0.04) * 4); R.cam.x += (p.x - R.cam.x) * 0.02; R.cam.y += (p.y - R.cam.y) * 0.02; R.draw({ t: G.t, hour: 17.4, daynight: true, reduced: s().settings.reduced, player: null, actors: cast.list, marks: [] }); }
       if (G.world && G.mode === 'play') {
-        update(dt); const st = s().settings, state = { t: G.t, hour: G.hour, daynight: st.daynight, reduced: st.reduced, player, actors: actors(), overlay, screen, marks: marks() };
+        update(dt); const st = s().settings, state = { t: G.t, hour: G.hour, daynight: st.daynight, reduced: st.reduced, player, actors: actors(), underlay, overlay, screen, marks: marks() };
         R.draw(state); R.minimap($('#mini'), state); SA.UI.frame(G.t);
       }
     } catch (err) { if (!G.failed) { G.failed = true; console.error('[atlas] frame', err); } }
@@ -357,6 +375,6 @@
     SA.save = SA.loadSave(store); R.init($('#world')); SA.UI.init(); G.applySettings(); input(); G.toMenu(); requestAnimationFrame(frame);
     if (SA.save.importedV1 && !SA.save.quests.v1note) { SA.save.quests.v1note = 1; SA.UI.toast('<b>Your first-edition journey came with you.</b> The original save is untouched.', 7000); }
   };
-  G.player = player; SA.Game = G;
+  G.player = player; G.effects = () => fx; SA.Game = G;
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', G.boot); else G.boot();
 })();

@@ -293,3 +293,7 @@ body.reduced .plaque { animation: none; opacity: 1; }
 
 #menu .board h1 { margin-bottom: 20px; }
 #menu .board { padding-bottom: 26px; }
+
+#menu .board h1 { color: var(--gold); font-style: italic; letter-spacing: .01em; }
+#menu .quote { transition: opacity .5s; max-width: 380px; }
+#menu .quote.swap { opacity: 0; }
