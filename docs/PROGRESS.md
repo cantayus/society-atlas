@@ -1,13 +1,15 @@
 # The Society Atlas V2 — state of the build
 
-Branch `v2-upgrade`. The first edition is frozen at `dist/legacy/` and linked from the title page.
+The second edition is on `main` and live. The first edition is frozen at `dist/legacy/` and linked from the title page.
 
 ## Built and tested
 - Isometric campus engine (Canvas 2D, no build step, no dependencies): 27 universities and the fictional city of Bellwether, each with its own hand-laid plan, seasons, day and night, traffic, boats, wildlife and crowds.
 - 37 research encounters: the first edition's 18 (labs reused unchanged), 12 added scholars, and 7 visits outside the United States (Oxford, Cambridge, Zurich, Kyoto, Peking, Cape Town, Toronto) alongside Lund and Paris.
 - Signature buildings (`dist/js/signature.js`): about fifty hand-written recipes for the buildings people recognise, with caricatured proportions.
 - Play loop: directory, office, fieldwork on foot (one task per encounter), research problem, Gazette, travel with events on the way, Bellwether hub and the colloquium after eighteen methods.
-- Three mentor characters (senior PhD students) with animated portraits and an event-driven, rate-limited line queue.
+- Three mentor characters (senior PhD students) with animated portraits and an event-driven, rate-limited line queue. The mentor waits on the south plaza, labelled by first name, and tells you the next step when asked; they no longer walk behind the player.
+- Learn to Play is four short pages written for this edition (`UI.tutorial` in `dist/js/ui.js`). The first edition's practice room is no longer loaded by V2.
+- Pace: the player walks at 3.2 tiles a second (5.4 with Shift), passers-by at about 0.7 to 1.1, and cars, the tram and squirrels were slowed to match. Walking speed is still adjustable in Options.
 - Sound: synthesized effects and ambience; 29 original modal pieces (one per campus, the title page and Bellwether).
 - Caricature portraits for the 27 scholars who had photographs in the first edition (`tools/make-caricatures.py`).
 - Two campus secrets on every campus, five field sketches per visit, stamps, archive cards, achievements.
@@ -20,7 +22,7 @@ Branch `v2-upgrade`. The first edition is frozen at `dist/legacy/` and linked fr
 - The licence ledger for the original portraits is unchanged from the first edition.
 - No fog of exploration (removed so the campuses are visible), no rain, no shop or cosmetics.
 - Not yet tried on phones or with a screen reader; frame rate was only measured in a software-rendered test browser.
-- Nothing has been pushed to GitHub or deployed.
+- Deployed from `main` by the manual “Publish browser game” workflow; changes reach the site only after a merge and a fresh run of that workflow.
 
 ## Checks
 - `node tests/v2-content.cjs` — every campus generates, buildings do not overlap, every point of interest is reachable, each campus has two secrets and a score whose phrases are exactly four bars, every encounter has a task, a lab, a visit and a source; save migration.
