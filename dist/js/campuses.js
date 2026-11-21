@@ -25,6 +25,7 @@
     P.prop('flag', cx - 4, y, { cols: P.def.colors }); P.prop('flag', cx + 4, y, { cols: P.def.colors });
     P.poi('spawn', cx, y + 3);
     P.path([cx, y + 4], [cx, 49], 3, P.def.plaza || T.BRICK, 'y');
+    for (let yy = 50; yy <= 51; yy++) for (let xx = cx - 1; xx <= cx + 1; xx++) if (P.get(xx, yy) === T.ROAD) P.set(xx, yy, T.CROSS);
   }
   const hall = (P, x, y, w, h, name, o = {}) => P.build(x, y, w, h, { name, ...o });
   const alley = (P, kind, x0, y0, x1, y1, step = 3, o = {}) => P.row(kind, x0, y0, x1, y1, step, o);

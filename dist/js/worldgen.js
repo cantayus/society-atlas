@@ -8,9 +8,9 @@
   const SA = host.SA;
   const T = {
     GRASS: 0, MEADOW: 1, DIRT: 2, GRAVEL: 3, BRICK: 4, STONE: 5, COBBLE: 6, SAND: 7, WATER: 8, ROAD: 9,
-    WALK: 10, FIELD: 12, FOREST: 13, SNOW: 14, BRIDGE: 15, TRACK: 16, SHORE: 17,
+    WALK: 10, FIELD: 12, FOREST: 13, SNOW: 14, BRIDGE: 15, TRACK: 16, SHORE: 17, CROSS: 18,
   };
-  const PATHLIKE = new Set([T.DIRT, T.GRAVEL, T.BRICK, T.STONE, T.COBBLE, T.SAND, T.WALK, T.BRIDGE]);
+  const PATHLIKE = new Set([T.DIRT, T.GRAVEL, T.BRICK, T.STONE, T.COBBLE, T.SAND, T.WALK, T.BRIDGE, T.CROSS]);
   const GREEN = new Set([T.GRASS, T.MEADOW, T.FOREST, T.SNOW]);
 
   class Plan {
@@ -19,7 +19,7 @@
       this.terrain = new Uint8Array(N * N).fill(snow ? T.SNOW : T.GRASS);
       this.block = new Uint8Array(N * N);
       this.keep = new Uint8Array(N * N);       // 1 = planner must not plant here
-      this.buildings = []; this.props = []; this.pois = {}; this.interact = []; this.roads = []; this.boats = [];
+      this.buildings = []; this.props = []; this.pois = {}; this.interact = []; this.roads = []; this.boats = []; this.walks = [];
       this.rand = SA.rng(seed);
     }
     in(x, y) { return x >= 0 && y >= 0 && x < this.N && y < this.N; }
@@ -37,6 +37,7 @@
     }
     // straight or diagonal band between two tiles
     line(x0, y0, x1, y1, width, t) {
+      if (x0 !== x1 && y0 !== y1) this.walks.push({ x0, y0, x1, y1, width, t });      // drawn as a smooth band later
       const steps = Math.max(Math.abs(x1 - x0), Math.abs(y1 - y0)) || 1, half = (width - 1) / 2;
       for (let s = 0; s <= steps; s++) {
         const x = x0 + ((x1 - x0) * s) / steps, y = y0 + ((y1 - y0) * s) / steps;
@@ -230,6 +231,39 @@
       }
       const sx = b.x + b.w; for (let y = b.y + 1; y < b.y + b.h; y += 2) if (P.in(sx, y) && GREEN.has(P.get(sx, y)) && !P.taken(sx, y)) P.prop('bush', sx, y);
     }
+    // 3b. finer dressing: entrances, shores, plaza borders, woodland floor, street furniture, lawn life
+    const year = visit.year || 2000, HARDT = new Set([T.BRICK, T.STONE, T.SAND, T.COBBLE]);
+    const freeGreen = (x, y) => P.in(x, y) && GREEN.has(P.get(x, y)) && !P.block[I(x, y)] && !P.taken(x, y);
+    for (const b of P.buildings) {
+      const d = b.door, big = b.type === 'landmark' || b.type === 'secondary';
+      for (const dx of [-2, 2]) if (freeGreen(d.x + dx, d.y) || (P.in(d.x + dx, d.y) && PATHLIKE.has(P.get(d.x + dx, d.y)) && !P.taken(d.x + dx, d.y) && big)) P.prop(big ? 'topiary' : 'planter', d.x + dx, d.y - 0.15, { flower: !winter && SA.hash(d.x, d.y, 8) > 0.4 });
+      if (autumn && SA.hash(b.x, b.y, 31) > 0.45 && freeGreen(d.x - 1, d.y + 1)) P.prop('pumpkins', d.x - 1, d.y + 1);
+      if (winter && freeGreen(d.x + 1, d.y + 1)) P.prop('snowpile', d.x + 1, d.y + 1);
+      const rx = b.x - 1, ry = b.y + Math.floor(b.h / 2);
+      if (freeGreen(rx, ry) && SA.hash(b.x, b.y, 32) > 0.4) P.prop(year >= 1950 ? 'bikes' : SA.hash(b.x, b.y, 33) > 0.5 ? 'crates' : 'barrel', rx, ry);
+      if (b.type === 'rowhouse') { for (let x = b.x + 1; x < b.x + b.w; x += 3) if (P.in(x, d.y) && !P.taken(x, d.y) && !P.block[I(x, d.y)]) P.prop('stoop', x, d.y - 0.42, {}); if (freeGreen(b.x + b.w, b.y + 1) && SA.hash(b.x, b.y, 34) > 0.35) P.prop('laundry', b.x + b.w, b.y + 1); }
+    }
+    for (let y = 2; y < N - 2; y++) for (let x = 2; x < N - 2; x++) {
+      const k = I(x, y), t = P.terrain[k], r = SA.hash(x, y, P.seed + 51);
+      if (t === T.SHORE && !P.taken(x, y) && !winter) { if (r < 0.34) P.prop('reeds', x, y); else if (r < 0.42) P.prop('rock', x, y); else if (r < 0.47) P.prop('fern', x, y); }
+      else if (t === T.WATER && !winter && r < 0.05 && near(x, y, new Set([T.SHORE]), 1)) P.prop('lily', x, y);
+      else if (t === T.FOREST && !P.taken(x, y) && !P.block[k]) { if (r < 0.1) P.prop(winter ? 'snowpile' : 'fern', x, y); else if (r < 0.13) P.prop('log', x, y); else if (r < 0.16) P.prop('stump', x, y); else if (r < 0.2 && !winter) P.prop('mushrooms', x, y); }
+      else if (GREEN.has(t) && !P.block[k] && !P.taken(x, y) && !P.keep[k]) {
+        const byPlaza = near(x, y, HARDT, 1);
+        if (byPlaza && r < 0.16 && !winter) P.prop(r < 0.06 ? 'flowerbush' : 'flowers', x, y, { cols: [['#e58fb0', '#f1e9d8'], ['#e7c35a', '#f1e9d8'], ['#9b6fb5', '#f3c6d1'], ['#d9624e', '#f1e9d8']][Math.floor(r * 400) % 4] });
+        else if (!byPlaza && !near(x, y, PATHLIKE, 1) && !near(x, y, BUILT, 2)) {
+          if (r > 0.9965 && !winter) P.prop('picnicgroup', x, y, { col: ['#b8483a', '#3b5f8a', '#49683b'][Math.floor(r * 3000) % 3] });
+          else if (r > 0.993 && !winter) P.prop('reader', x, y);
+          else if (r > 0.9915) P.prop('birdbath', x, y);
+          else if (r > 0.99 && !winter) P.prop('easel', x, y);
+          else if (r > 0.986 && winter) P.prop('snowpile', x, y);
+        }
+      } else if (t === T.WALK && !P.taken(x, y)) {
+        const nextToRoad = near(x, y, new Set([T.ROAD, T.TRACK]), 1);
+        if (nextToRoad && (x * 3 + y * 5) % 9 === 0) { P.prop('lamp', x, y, { modern: year >= 1960 }); }
+        else if (nextToRoad && r < 0.03 && year >= 1900) P.prop(r < 0.012 ? 'hydrant' : year >= 1960 && r < 0.022 ? 'bin' : 'mailbox', x, y, { col: year < 1960 ? '#4a5a48' : '#2f4f7a' });
+      } else if (HARDT.has(t) && !P.block[k] && !P.taken(x, y) && r < 0.012 && near(x, y, GREEN, 1)) P.prop(year >= 1960 ? 'bin' : 'planter', x, y, { flower: true });
+    }
     // 4. lamps and benches along the walks
     for (let y = 3; y < N - 3; y++) for (let x = 3; x < N - 3; x++) {
       const k = I(x, y); if (!PATHLIKE.has(P.terrain[k]) || P.block[k]) continue;
@@ -276,7 +310,7 @@
     for (const b of P.buildings) lights.push({ x: b.door.x + 0.2, y: b.door.y - 0.3, z: 18, r: 54, window: true }, { x: b.x + b.w * 0.25, y: b.y + b.h - 0.2, z: b.height * 0.55, r: 40, window: true }, { x: b.x + b.w - 0.1, y: b.y + b.h * 0.5, z: b.height * 0.5, r: 40, window: true });
     return {
       key: def.key, def, visit, N, seed: P.seed, terrain: P.terrain, block: P.block, buildings: P.buildings, props: P.props,
-      pois: P.pois, interact: P.interact, roads: P.roads, spawn, sketches, lights, season, T,
+      pois: P.pois, interact: P.interact, roads: P.roads, boats: P.boats, walks: P.walks, spawn, sketches, lights, season, T,
     };
   }
 
