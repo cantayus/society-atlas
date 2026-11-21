@@ -243,7 +243,7 @@
     const book = $('.book', m); m.onmousemove = (ev) => { if (save().settings.reduced) return; const dx = ev.clientX / innerWidth - 0.5, dy = ev.clientY / innerHeight - 0.5; book.style.transform = `translate(-50%,-50%) rotateX(${54 - dy * 7}deg) rotateZ(${-4 + dx * 7}deg)`; };
     m.onmouseover = (ev) => { if (ev.target.closest('.pop') && !ev.relatedTarget?.closest?.('.pop')) sfx('hover'); };
     m.onclick = (ev) => { const b = ev.target.closest('[data-act]'); if (!b || b.disabled) return; SA.Audio.unlock(); SA.Music.play('menu'); sfx('page'); const a = b.dataset.act, g = G();
-      if (a === 'new') g.newJourney(); else if (a === 'continue') g.continueJourney(); else if (a === 'atlas') UI.atlas(); else if (a === 'notebook') UI.notebook(); else if (a === 'settings') UI.settings(); else if (a === 'credits') UI.notebook('sources'); else if (a === 'legacy') window.open('legacy/index.html', '_blank', 'noopener'); else if (a === 'tutorial') UI.tutorial(); };
+      if (a === 'new') g.newJourney(); else if (a === 'continue') g.continueJourney(); else if (a === 'atlas') UI.atlas(); else if (a === 'notebook') UI.notebook(); else if (a === 'settings') UI.settings(); else if (a === 'credits') UI.notebook('sources'); else if (a === 'legacy') { let w = null; try { w = window.open('legacy/index.html', '_blank'); } catch (e) { w = null; } if (!w) location.href = 'legacy/index.html'; } else if (a === 'tutorial') UI.tutorial(); };
   };
   UI.titleClose = () => { $('#menu').classList.remove('open'); $('#menu').innerHTML = ''; };
   UI.tutorial = () => {

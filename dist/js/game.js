@@ -345,7 +345,8 @@
   SA.on('save-failed', () => SA.UI.toast('This browser would not save the journey. Export it from the notebook to keep it.'));
 
   G.boot = () => {
-    SA.save = SA.loadSave(localStorage); R.init($('#world')); SA.UI.init(); G.applySettings(); input(); G.toMenu(); requestAnimationFrame(frame);
+    let store = { getItem: () => null }; try { if (window.localStorage) store = window.localStorage; } catch (e) { /* storage is unavailable here; play without saving */ }
+    SA.save = SA.loadSave(store); R.init($('#world')); SA.UI.init(); G.applySettings(); input(); G.toMenu(); requestAnimationFrame(frame);
     if (SA.save.importedV1 && !SA.save.quests.v1note) { SA.save.quests.v1note = 1; SA.UI.toast('<b>Your first-edition journey came with you.</b> The original save is untouched.', 7000); }
   };
   G.player = player; SA.Game = G;

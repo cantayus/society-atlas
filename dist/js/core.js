@@ -141,10 +141,9 @@
 
   let persistTimer = null;
   SA.persist = (now) => {
-    if (typeof localStorage === 'undefined') return;
     const write = () => {
       persistTimer = null;
-      try { localStorage.setItem(KEY, JSON.stringify(SA.save)); SA.emit('saved'); } catch (e) { SA.emit('save-failed'); }
+      try { window.localStorage.setItem(KEY, JSON.stringify(SA.save)); SA.emit('saved'); } catch (e) { if (!SA.saveWarned) { SA.saveWarned = true; SA.emit('save-failed'); } }
     };
     if (now) { clearTimeout(persistTimer); write(); } else if (!persistTimer) persistTimer = setTimeout(write, 700);
   };
